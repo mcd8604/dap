@@ -150,7 +150,50 @@ public class DatabaseController {
     }
     
     /**
+     * Checks if Customer exists in database by CustomerID
      * 
+     * @param c the customer to check
+     * @return true if the customer exists, false if not
+     */
+    public static Boolean isCustomer(Customer c) {
+
+    }
+
+    /**
+     * Creates a customer in the database,
+     * updates the customer object with a
+     * new CustomerID and returns in.
+     * 
+     * @param c the customer to add
+     * @return the customer that was added
+     */
+    public static Customer createCustomer(Customer c) {
+
+    }
+
+    /**
+     * Grabs the list of items from the database
+     * and returns an ArrayList of Item objects.
+     * 
+     * @return an ArrayList of Item objects.
+     */
+    public static ArrayList<Item> getItems() {
+
+    }
+
+    /**
+     * Adds a new order to the database
+     * (Adds the Order's list of OrderItems first)
+     * 
+     * @param the order to add to the database
+     * @return the order that was added
+     */
+    public static Order createOrder(Order o) {
+
+    }
+
+    /**
+     * TEST CASE
      */
     public static void main(String [] args) {
         String sqlQuery = "SELECT * FROM Customer;";
