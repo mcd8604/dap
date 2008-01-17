@@ -18,16 +18,25 @@ public class Customer {
     private String firstName;
     private String address;
     private String city;
-    private String state;
-    private String zipcode;
-    private String phone;
-    private String email;
     
     private ArrayList orders;
 
     /** Creates a new instance of Customer */
-    public Customer(int p_customerID, String p_lastName, String p_firstName, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email) {
+    public Customer(int p_customerID) {
 	customerID = p_customerID;
+      
+      orders = new ArrayList();
+    }
+
+    /** Creates a new instance of Customer */
+    public Customer(int p_customerID) {
+	customerID = p_customerID;
+
+      orders = new ArrayList();
+    }
+
+    /** Creates a new instance of Customer */
+    public Customer(String p_lastName, String p_firstName, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email) {
       lastName = p_lastName;
       firstName = p_firstName;
       address = p_address;
@@ -85,3 +94,4 @@ public class Customer {
     }
 
 }
+
