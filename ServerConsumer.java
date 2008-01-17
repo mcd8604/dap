@@ -11,7 +11,6 @@
 
 import javax.naming.*;
 import javax.jms.*;
-import server.DatabaseController;
 
 public class ServerConsumer {
      private final String QUEUE_NAME = "jms/Queue";

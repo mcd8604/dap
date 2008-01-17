@@ -5,6 +5,8 @@
 
 package server;
 
+import DatabaseController;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

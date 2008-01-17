@@ -1,9 +1,4 @@
-/**
- * DatabaseController.java
- *
- */
 
-package server;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -156,7 +151,7 @@ public class DatabaseController {
      * @return true if the customer exists, false if not
      */
     public static Boolean isCustomer(Customer c) {
-
+    	return false;
     }
 
     /**
@@ -168,7 +163,7 @@ public class DatabaseController {
      * @return the customer that was added
      */
     public static Customer createCustomer(Customer c) {
-
+    	return null;
     }
 
     /**
@@ -178,7 +173,7 @@ public class DatabaseController {
      * @return an ArrayList of Item objects.
      */
     public static ArrayList<Item> getItems() {
-
+    	return null;
     }
 
     /**
@@ -189,7 +184,7 @@ public class DatabaseController {
      * @return the order that was added
      */
     public static Order createOrder(Order o) {
-
+    	return null;
     }
 
     /**

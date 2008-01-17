@@ -23,7 +23,7 @@ public class Order {
 	orderID = p_orderID;
       customerID = p_customerID;
       total = p_total;
-      orderItems = new ArrayList();
+      orderItems = new ArrayList<OrderItem>();
     }
     
     public int getOrderID() {
@@ -42,8 +42,7 @@ public class Order {
       return orderItems;
     }
 
-    public void setOrderItems(ArrayList p_OrderItems) {
-      this.orderItems = p_OrderItems;
+    public void setOrderItems(ArrayList<OrderItem> p_OrderItems) {
     }
 }
 

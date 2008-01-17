@@ -18,21 +18,18 @@ public class Customer {
     private String firstName;
     private String address;
     private String city;
+    private String state;
+    private String zipcode;
+    private String phone;
+    private String email;
     
-    private ArrayList orders;
-
-    /** Creates a new instance of Customer */
-    public Customer(int p_customerID) {
-	customerID = p_customerID;
-      
-      orders = new ArrayList();
-    }
+    private ArrayList<Order> orders;
 
     /** Creates a new instance of Customer */
     public Customer(int p_customerID) {
 	customerID = p_customerID;
 
-      orders = new ArrayList();
+      orders = new ArrayList<Order>();
     }
 
     /** Creates a new instance of Customer */
@@ -46,7 +43,7 @@ public class Customer {
       phone = p_phone;
       email = p_email;
       
-      orders = new ArrayList();
+      orders = new ArrayList<Order>();
     }
     
     public int getCustomerID() {
@@ -85,11 +82,11 @@ public class Customer {
       return email;
     }
     
-    public ArrayList getOrders() {
+    public ArrayList<Order> getOrders() {
       return orders;
     }
     
-    public void setOrders(ArrayList p_orders) {
+    public void setOrders(ArrayList<Order> p_orders) {
       orders = p_orders;
     }
 

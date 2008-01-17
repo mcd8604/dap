@@ -18,7 +18,7 @@ public class Item {
     private double salePrice;
     private double supplierPrice;
 
-    /** Creates a new instance of Customer */
+    /** Creates a new instance of Item */
     public Item (int p_itemID, String p_itemName, String p_itemDesc, double p_salePrice, double p_supplierPrice) {
       itemID = p_itemID;
       itemName = p_itemName;

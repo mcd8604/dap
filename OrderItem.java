@@ -1,11 +1,4 @@
-import java.util.ArrayList;
-/*
- * OrderItem.java
- *
- * This class holds OrderItem data
- *
- * Created on January 17, 2008, 12:51 PM
- */
+
 
 /**
  *
@@ -17,14 +10,14 @@ public class OrderItem {
     private Item item;
     private int quantity;
 
-    /** Creates a new instance of Customer */
+    /** Creates a new instance of OrderItem */
     public OrderItem(int p_OrderItemID) {
 	orderItemID= p_OrderItemID;
     }
 
     /** Creates a new instance of Customer */
     public OrderItem(Item p_item, int p_quantity) {
-      item= p_item;
+      item = p_item;
       quantity= p_quantity;
     }
 
@@ -43,7 +36,7 @@ public class OrderItem {
       return item;
     }
     
-    public String getQuantity() {
+    public int getQuantity() {
       return quantity;
     }
 }
