@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /*
  * Item.java
  *
@@ -10,7 +12,12 @@
  *
  * @author mcd
  */
-public class Item {
+public class Item implements Serializable {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
   
     private int itemID;
     private String itemName;

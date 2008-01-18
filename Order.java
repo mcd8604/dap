@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 /*
  * Order.java
@@ -11,7 +12,12 @@ import java.util.ArrayList;
  *
  * @author mcd
  */
-public class Order {
+public class Order  implements Serializable {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     private int orderID;
     private int customerID;

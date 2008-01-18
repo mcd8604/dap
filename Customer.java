@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 /*
  * Customer.java
@@ -11,9 +12,14 @@ import java.util.ArrayList;
  *
  * @author mcd
  */
-public class Customer {
+public class Customer implements Serializable {
 
-    private int customerID;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private int customerID;
     private String lastName;
     private String firstName;
     private String address;
