@@ -62,7 +62,7 @@ public class ServerConsumer {
             MessageConsumer cons = sess.createConsumer(dest);
                     
             // set the message listener
-            cons.setMessageListener(new ObjectMessageListener());
+            cons.setMessageListener(new ServerObjectMessageListener());
         
             // start receiving messages
             conn.start();

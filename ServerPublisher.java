@@ -13,20 +13,22 @@
  * @modified mcd
  */
 
+import java.io.Serializable;
+
 import javax.naming.*;
 import javax.jms.*;
 
 public class ServerPublisher {
 
-    private static final String TOPIC_NAME = "jms/Topic";
-    private final String CONN_FACTORY = "jms/TopicConnection";
+	private static final String TOPIC_NAME = "jms/Topic";
+	private static final String CONN_FACTORY = "jms/TopicConnection";
     
     private Context jndiContext; // JNDI context for looking up names
     private TopicConnectionFactory cf;
     private Topic dest;
     
     /** Creates a new instance of Producer */
-    public ServerPublisher(String destName) {
+    public ServerPublisher() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -46,7 +48,7 @@ public class ServerPublisher {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(destName);
+           dest = (Topic)jndiContext.lookup(TOPIC_NAME);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -55,7 +57,7 @@ public class ServerPublisher {
     }
     
     /** create the connection, session, and send messages */
-    public void sendMessages() {
+    public void sendMessage(Serializable object, int action) {
         try {
             // create the connection
             TopicConnection conn = cf.createTopicConnection();
@@ -66,32 +68,19 @@ public class ServerPublisher {
             // create a producer
             TopicPublisher pub = sess.createPublisher(dest);
             
-            while(true) {
-            	//temporary - keep the server running
-            }
+            // create an object message
+            ObjectMessage om = sess.createObjectMessage(object);
             
-            //create a text message
-            /*TextMessage text = sess.createTextMessage();
-        
-            // loop to create and send the messages
-            for(int i = 0; i < NUM_MSGS; i++) {
-               Date dt = new Date()
-               text.setText("Message generated at " + dt.toString());
-               System.out.println("Sending " + text.getText());
-               pub.publish(text);
-               delay();
-            }
-        
-        	// send over a final message to shutdown the subscriber
-        	text.setText("NO MORE MESSAGES");
-            System.out.println("Sending " + text.getText());
-            pub.publish(text);
-            delay();
+            // set the action for the message
+            om.setIntProperty(Actions.ACTION, action);
+            
+            // publish the message
+            pub.publish(om);
             
             //close everything down
             if(conn != null) {
                 conn.close();
-            }*/
+            }
         }
         catch(JMSException je) {
             System.out.println("Unable to close the connection: " + je.getMessage());
@@ -99,21 +88,15 @@ public class ServerPublisher {
         }
     }
     
-    private void delay(){ // 15 second delay
-        try{
-            Thread.sleep(15000);
-        }
-        catch(InterruptedException ie){}
-    }
     /**
      * Start the ServerPublisher
      */
     public static void main(String [] args){
         
         // create the Producer
-        ServerPublisher prd = new ServerPublisher(TOPIC_NAME);
+        //ServerPublisher prd = new ServerPublisher();
         
         // send the messages
-        prd.sendMessages();
+        //prd.sendMessage();
     }
 }
