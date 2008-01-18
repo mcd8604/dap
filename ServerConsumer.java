@@ -60,43 +60,12 @@ public class ServerConsumer {
         
             // create a consumer
             MessageConsumer cons = sess.createConsumer(dest);
+                    
+            // set the message listener
+            cons.setMessageListener(new ObjectMessageListener());
         
             // start receiving messages
             conn.start();
-        
-            // loop to create and send the messages
-            while(true) {
-                Message m = cons.receive(); // block until a message appears
-                if(m != null) {
-
-                    if(m instanceof CustomerMessage){
-
-                        CustomerMessage msg = (CustomerMessage)m;
-                        System.out.println("ServerConsumer received " + msg.getText());
-
-                        //DatabaseController.isCustomer(msg.getCustomer());
-                        //DatabaseController.createCustomer(msg.getCustomer());
-
-                    } else if(m instanceof ItemMessage){
-
-                        ItemMessage msg = (ItemMessage)m;
-                        System.out.println("ServerConsumer received " + msg.getText());
-
-                        //DatabaseController.getItems();
-
-                    } else if(m instanceof OrderMessage){
-
-                        OrderMessage msg = (OrderMessage)m;
-                        System.out.println("ServerConsumer received " + msg.getText());
-
-                        //DatabaseController.createOrder(msg.getOrder());
-                    }
-
-                }
-                else {
-                    break;
-                }
-            }
             
             //close everything down
             if(conn != null) {
@@ -119,10 +88,12 @@ public class ServerConsumer {
             System.exit(1);
         }
         
-        // create the Producer
-        Consumer prd = new Consumer(args[0]);
+        // create the ServerConsumer
+        ServerConsumer scon = new ServerConsumer(args[0]);
         
-        // send the messages
-        prd.getMessages();
+        // continually check for messages
+        while(true) {
+        	scon.getMessages();
+        }
     }
 }
