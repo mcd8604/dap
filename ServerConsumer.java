@@ -9,6 +9,8 @@
  * @author  mcd
  */
 
+import java.util.Scanner;
+
 import javax.naming.*;
 import javax.jms.*;
 
@@ -20,8 +22,14 @@ public class ServerConsumer {
     private ConnectionFactory cf;
     private Destination dest;
     
+    private Connection conn;
+    private Session sess;
+    private MessageConsumer cons;
+    
+    private ServerPublisher spub;
+    
     /** Creates a new instance of ServerConsumer*/
-    public ServerConsumer(String destName) {
+    public ServerConsumer() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -41,7 +49,7 @@ public class ServerConsumer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(destName);
+           dest = (Destination)jndiContext.lookup(QUEUE_NAME);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -49,51 +57,59 @@ public class ServerConsumer {
         }
     }
     
-    /** get messages from the queue */
-    public void getMessages() {
-         try {
-            // create the connection
-            Connection conn = cf.createConnection();
-        
-            // create the session
-            Session sess = conn.createSession(false,Session.AUTO_ACKNOWLEDGE);
-        
-            // create a consumer
-            MessageConsumer cons = sess.createConsumer(dest);
-                    
-            // set the message listener
-            cons.setMessageListener(new ServerObjectMessageListener());
-        
-            // start receiving messages
-            conn.start();
-            
-            //close everything down
-            if(conn != null) {
-                conn.close();
-            }
-        }
-        catch(JMSException je) {
-            System.out.println("Unable to close the connection: " + je.getMessage());
-            System.exit(1);
+    public void start() {
+        // create the connection
+        try {
+			conn = cf.createConnection();
+    
+	        // create the session
+	        sess = conn.createSession(false,Session.AUTO_ACKNOWLEDGE);
+	    
+	        // create a consumer (queue receiver)
+	        cons = sess.createConsumer(dest);
+	        
+	        // create a publisher (topic sender)
+	        spub = new ServerPublisher();
+	        
+	        // set the message listener
+	        cons.setMessageListener(new ServerObjectMessageListener(spub));
+	    
+	        // start receiving messages
+	        conn.start();
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public void close() {
+    	//close everything down
+        if(conn != null) {
+        	try {
+        		spub.close();
+				conn.close();
+			} catch (JMSException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
     
     /**
      * Start the ServerConsumer, getting the destination from the command line args
      */
-    public static void main(String [] args){
-        // make sure there an argument
-        if(args.length < 1){
-            System.out.println("You must specify a destination.");
-            System.exit(1);
-        }
-        
+    public static void main(String [] args){        
         // create the ServerConsumer
-        ServerConsumer scon = new ServerConsumer(args[0]);
+        ServerConsumer scon = new ServerConsumer();
+        scon.start();
         
-        // continually check for messages
-        while(true) {
-        	scon.getMessages();
+        //loop this until user enters input
+        Scanner s = new Scanner(System.in);
+        System.out.println("To exit, type 'exit' then hit enter.");
+        
+        while(!s.hasNext()) {
         }
+        
+        scon.close();
     }
 }

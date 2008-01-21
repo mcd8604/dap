@@ -27,6 +27,10 @@ public class ServerPublisher {
     private TopicConnectionFactory cf;
     private Topic dest;
     
+    private TopicConnection conn;
+    private TopicSession sess;
+    private TopicPublisher pub;
+    
     /** Creates a new instance of Producer */
     public ServerPublisher() {
         // get a JNDI naming context
@@ -49,25 +53,26 @@ public class ServerPublisher {
         
         try{
            dest = (Topic)jndiContext.lookup(TOPIC_NAME);
+           
+           // create the connection
+           conn = cf.createTopicConnection();
+       
+           // create the session
+           sess = conn.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
+       
+           // create a producer
+           pub = sess.createPublisher(dest);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
             System.exit(1);
         }
+        System.out.println("SERVER PUBLISHER STARTED");
     }
     
     /** create the connection, session, and send messages */
     public void sendMessage(Serializable object, int action) {
-        try {
-            // create the connection
-            TopicConnection conn = cf.createTopicConnection();
-        
-            // create the session
-            TopicSession sess = conn.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
-        
-            // create a producer
-            TopicPublisher pub = sess.createPublisher(dest);
-            
+        try {            
             // create an object message
             ObjectMessage om = sess.createObjectMessage(object);
             
@@ -76,15 +81,24 @@ public class ServerPublisher {
             
             // publish the message
             pub.publish(om);
-            
-            //close everything down
-            if(conn != null) {
-                conn.close();
-            }
+            //System.out.println("SERVER PRODUCER PUBLISHED MESSAGE");
+            //System.out.println(om.toString());
         }
         catch(JMSException je) {
             System.out.println("Unable to close the connection: " + je.getMessage());
             System.exit(1);
+        }
+    }
+    
+    public void close() {
+        //close everything down
+        if(conn != null) {
+            try {
+				conn.close();
+			} catch (JMSException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
     

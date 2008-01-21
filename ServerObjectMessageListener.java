@@ -10,14 +10,15 @@ public class ServerObjectMessageListener implements MessageListener {
 	
 	private ServerPublisher spub;
 	
-	public ServerObjectMessageListener() {
+	public ServerObjectMessageListener(ServerPublisher p_spub) {
         // create the ServerPublisher
-        spub = new ServerPublisher();
+        spub = p_spub;
 	}
 
 	@Override
 	public void onMessage(Message m) {
 		if(m != null) {
+			//System.out.println("MESSAGE RECEIVED: " + m.toString());
 			ObjectMessage om = (ObjectMessage)m;
         	Serializable result = null;
         	int action;

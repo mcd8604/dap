@@ -15,7 +15,6 @@ import javax.naming.*;
 import javax.jms.*;
 
 public class TestProducer {
-    private final int NUM_MSGS = 10; // generate N messages
     private final String QUEUE_NAME = "jms/Queue";
     private final String CONN_FACTORY = "jms/QueueConnection";
     
@@ -24,7 +23,7 @@ public class TestProducer {
     private Destination dest;
     
     /** Creates a new instance of Producer */
-    public TestProducer(String destName) {
+    public TestProducer() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -44,7 +43,7 @@ public class TestProducer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(destName);
+           dest = (Destination)jndiContext.lookup(QUEUE_NAME);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -90,13 +89,13 @@ public class TestProducer {
      */
     public static void main(String [] args){
         // make sure there an argument
-        if(args.length < 1){
+        /*if(args.length < 1){
             System.out.println("You must specify a destination.");
             System.exit(1);
-        }
+        }*/
         
         // create the Producer
-        TestProducer prd = new TestProducer(args[0]);
+        TestProducer prd = new TestProducer();
         
         // send the messages
         prd.sendMessages();
