@@ -2,6 +2,7 @@
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Database
@@ -151,7 +152,29 @@ public class DatabaseController {
      * @return true if the customer exists, false if not
      */
     public static Boolean isCustomer(Customer c) {
-    	return false;
+    	Boolean ret = false;
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		// *** do we need PreparedStatement?
+	            statement = getInstance().conn.createStatement(); 
+	            sqlQuery = "SELECT * FROM Customer WHERE ID=" + c.getCustomerID();
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+	            // TODO Evaluate results
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+        return ret;
     }
 
     /**
@@ -173,7 +196,24 @@ public class DatabaseController {
      * @return an ArrayList of Item objects.
      */
     public static ArrayList<Item> getItems() {
-    	return null;
+    	ArrayList<Item> ret = new ArrayList<Item>();
+    	String sqlQuery = "SELECT * FROM item";
+    	try {
+			ArrayList<String> a = queryToArrayList(sqlQuery);
+			Iterator<String> iter = a.iterator();
+			while(iter.hasNext()) {
+				String i = iter.next();
+				System.out.println(i);
+				
+				// TODO Parse Strings into items
+				Item item = new Item(0, "", "", 0, 0);
+				ret.add(item);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
     }
 
     /**
@@ -191,7 +231,7 @@ public class DatabaseController {
      * TEST CASE
      */
     public static void main(String [] args) {
-        String sqlQuery = "SELECT * FROM Customer;";
+        String sqlQuery = "SELECT * FROM customer;";
         try {
 	          ArrayList<String> ret = DatabaseController.queryToArrayList(sqlQuery); 
 	          System.out.println("Results:");
