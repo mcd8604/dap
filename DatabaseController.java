@@ -201,7 +201,9 @@ public class DatabaseController {
         		insertStatement = getInstance().conn.createStatement();  
 
 	            // TODO finish insert values
-	            sqlInsert = "INSERT values() into customer";
+	            sqlInsert = "INSERT INTO customer (FirstName, LastName) VALUES ('" + 
+	            c.getFirstName() + "', '" + c.getLastName() + 
+	            "') WHERE Customer.ID = '" + c.getCustomerID() + "';";
 	            
 	            //if update
             	if(insertStatement.execute(sqlInsert)) {
@@ -210,7 +212,7 @@ public class DatabaseController {
                 	//TODO finish query to get recently created customer ID
             		sqlQuery = "";
             		
-            		queryStatement.execute(sqlQuery);
+            		//queryStatement.execute(sqlQuery);
             		
             		c.setCustomerID(0);
                 	ret = c;
