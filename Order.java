@@ -25,6 +25,12 @@ public class Order  implements Serializable {
     private ArrayList<OrderItem> orderItems;
 
     /** Creates a new instance of Order */
+    public Order(int p_customerID, float p_total) {
+      customerID = p_customerID;
+      total = p_total;
+      orderItems = new ArrayList<OrderItem>();
+    }
+    
     public Order(int p_orderID, int p_customerID, float p_total) {
 	orderID = p_orderID;
       customerID = p_customerID;
