@@ -56,6 +56,10 @@ public class Customer implements Serializable {
       return customerID;
     }
 
+	public void setCustomerID(int i) {
+	  customerID = i;
+	}
+
     public String getLastName() {
       return lastName;
     }

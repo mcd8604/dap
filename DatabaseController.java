@@ -186,7 +186,43 @@ public class DatabaseController {
      * @return the customer that was added
      */
     public static Customer createCustomer(Customer c) {
-    	return null;
+    	Customer ret = null;
+    	ResultSet rs = null;
+    	// *** Do we need PreparedStatement?
+    	Statement insertStatement = null;
+    	String sqlInsert = null;
+    	Statement queryStatement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		insertStatement = getInstance().conn.createStatement();  
+
+	            // TODO finish insert values
+	            sqlInsert = "INSERT values() into customer";
+	            
+	            //if update
+            	if(insertStatement.execute(sqlInsert)) {
+            		queryStatement = getInstance().conn.createStatement(); 
+            		
+                	//TODO finish query to get recently created customer ID
+            		sqlQuery = "";
+            		
+            		queryStatement.execute(sqlQuery);
+            		
+            		c.setCustomerID(0);
+                	ret = c;
+            	}
+        	}
+        } catch(SQLException e){
+			e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+        return ret;
     }
 
     /**
