@@ -162,11 +162,12 @@ public class DatabaseController {
         	synchronized(stmtLock) {
         		// *** do we need PreparedStatement?
 	            statement = getInstance().conn.createStatement(); 
-	            sqlQuery = "SELECT * FROM Customer WHERE ID=" + c.getCustomerID();
+	            sqlQuery = "SELECT * FROM Customer WHERE ID='" + c.getCustomerID() + "';";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
 	            // TODO Evaluate results
+	            
         	}        	
         } catch(SQLException e){
 			e.printStackTrace();
@@ -217,7 +218,6 @@ public class DatabaseController {
         	}
         } catch(SQLException e){
 			e.printStackTrace();
-            throw new SQLException(e.getMessage());
         } finally {
 			getInstance().closeConnection();
 		}
@@ -260,6 +260,9 @@ public class DatabaseController {
      * @return the order that was added
      */
     public static Order createOrder(Order o) {
+    	//insert order
+    	//get orderid
+    	//insert all orderitems
     	return null;
     }
 
