@@ -34,11 +34,15 @@ public class Client implements ActionListener {
 	
 	private ClientGUI gui;
 	
+	public String cookieID;
+	
 	/**
 	 * Initialize and display the GUI
 	 */
 	public Client() {
 		displayWelcome();
+		
+		this.cookieID = CookieID.createCookieID();
 
 		//listen to topic for server messages
 		subscriber = new ClientSubscriber();
@@ -51,7 +55,7 @@ public class Client implements ActionListener {
 		System.out.println("Client created, requesting items from server...");
 		
 		//Ask server for list of items - used later
-		producer.sendMessage(null, Actions.GET_ITEMS);
+		producer.sendMessage(null, Actions.GET_ITEMS, this.cookieID);
 		//ArrayList<Object> items = getItems();
 	}
 	
@@ -85,7 +89,7 @@ public class Client implements ActionListener {
 	 */
 	public ArrayList<Object> getItems() {
 		//Produce RequestMessage to Queue
-		producer.sendMessage(null, Actions.GET_ITEMS);
+		producer.sendMessage(null, Actions.GET_ITEMS, this.cookieID);
 		
 		//Receive ResponseMessage from Topic
 		
@@ -102,7 +106,7 @@ public class Client implements ActionListener {
 			//If existing, ask Server if customer exists
 			//Produce RequestMessage to Queue
 			int id = 0;
-			producer.sendMessage(id, Actions.IS_CUSTOMER);
+			producer.sendMessage(id, Actions.IS_CUSTOMER, this.cookieID);
 			
 			//Receive ResponseMessage from Topic
 				//If exists, display order screen
@@ -117,7 +121,7 @@ public class Client implements ActionListener {
 				//ask Server to create customer - createCustomer(Customer c)
 					//Produce RequestMessage to Queue
 					Customer customer = null;
-					producer.sendMessage(customer, Actions.CREATE_CUSTOMER);
+					producer.sendMessage(customer, Actions.CREATE_CUSTOMER, this.cookieID);
 			
 					//Receive ResponseMessage from Topic
 				//display order screen
@@ -127,7 +131,7 @@ public class Client implements ActionListener {
 			
 			//Send Order to Server via Queue
 			Order order = null;
-			producer.sendMessage(order, Actions.CREATE_ORDER);
+			producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
 			
 			//Get response from Server via Topic
 		}
@@ -161,11 +165,14 @@ public class Client implements ActionListener {
 
 	public void getItems_Result(ArrayList<Item> items) {
 		// TODO Auto-generated method stub
+		for(Item i : items) {
+			System.out.println(i.toString());
+		}
 		gui.populateItems(items);
 	}
 
 	public void createOrder_Result(Order order) {
 		// TODO Auto-generated method stub
-		gui.displayMessage("Order created succesfully.");
+		gui.displayMessage("Order created successfully.");
 	}
 }

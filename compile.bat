@@ -1,0 +1,1 @@
+javac -Xlint -classpath C:/Sun/SDK/lib/javaee.jar *.java

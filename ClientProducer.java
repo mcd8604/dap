@@ -49,8 +49,9 @@ public class ClientProducer {
 		System.out.println("ClientProducer initialized");
     }
     
-    /** create the connection, session, and send messages */
-    public void sendMessage(Serializable object, int action) {
+    /** create the connection, session, and send messages 
+     * @param cookieID */
+    public void sendMessage(Serializable object, int action, String cookieID) {
         try {
             // create the connection
             Connection conn = cf.createConnection();
@@ -66,6 +67,10 @@ public class ClientProducer {
             
             // set the action for the message
             message.setIntProperty(Actions.ACTION, action);
+            
+            // set the cookieID for the message
+            message.setStringProperty(CookieID.COOKIE_ID, cookieID);
+            System.out.println(cookieID);
             
             prod.send(message);
 			System.out.println("CLIENT SENT MESSAGE");

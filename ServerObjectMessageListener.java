@@ -17,8 +17,18 @@ public class ServerObjectMessageListener implements MessageListener {
 
 	public void onMessage(Message m) {
 		if(m != null) {
-			//System.out.println("MESSAGE RECEIVED: " + m.toString());
+			System.out.println("MESSAGE RECEIVED: " + m.toString());
+
 			ObjectMessage om = (ObjectMessage)m;
+			
+			String cookieID = null;
+			try {
+				cookieID = om.getStringProperty(CookieID.COOKIE_ID);
+			} catch (JMSException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
         	Serializable result = null;
         	int action;
 			try {
@@ -43,7 +53,7 @@ public class ServerObjectMessageListener implements MessageListener {
 				
 	        	// 3 - send the result back using a ServerPublisher
 	        	if(result != null) {
-		            spub.sendMessage(result, action);
+		            spub.sendMessage(result, action, cookieID);
 	        	}
 			} catch (JMSException e) {
 				// TODO Auto-generated catch block

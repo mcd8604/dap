@@ -67,8 +67,9 @@ public class ServerPublisher {
         System.out.println("SERVER PUBLISHER STARTED");
     }
     
-    /** create the connection, session, and send messages */
-    public void sendMessage(Serializable object, int action) {
+    /** create the connection, session, and send messages 
+     * @param cookieID */
+    public void sendMessage(Serializable object, int action, String cookieID) {
         try {            
             // create an object message
             ObjectMessage om = sess.createObjectMessage(object);
@@ -76,9 +77,12 @@ public class ServerPublisher {
             // set the action for the message
             om.setIntProperty(Actions.ACTION, action);
             
+            // set the cookieID for the message
+            om.setStringProperty(CookieID.COOKIE_ID, cookieID);
+            
             // publish the message
             pub.publish(om);
-            //System.out.println("SERVER PRODUCER PUBLISHED MESSAGE");
+            System.out.println("SERVER PRODUCER PUBLISHED MESSAGE");
             //System.out.println(om.toString());
         }
         catch(JMSException je) {
