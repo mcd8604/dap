@@ -41,7 +41,7 @@ public class ServerConsumer {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (ConnectionFactory)jndiContext.lookup(CONN_FACTORY);
+           cf = (ConnectionFactory)jndiContext.lookup(Server.QUEUE_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -49,7 +49,7 @@ public class ServerConsumer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(QUEUE_NAME);
+           dest = (Destination)jndiContext.lookup(Server.QUEUE_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());

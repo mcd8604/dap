@@ -14,9 +14,6 @@ import javax.jms.*;
  * @author  Adam Strong
  */
 public class ClientProducer {
-	
-    private final String QUEUE_NAME = "jms/Queue";
-    private final String CONN_FACTORY = "jms/QueueConnection";
     
     private Context jndiContext; // JNDI context for looking up names
     private ConnectionFactory cf;
@@ -26,6 +23,7 @@ public class ClientProducer {
     public ClientProducer() {
         // get a JNDI naming context
         try {
+    		System.out.println("producer getting context");
             jndiContext = new InitialContext();
         }
         catch(NamingException ne){
@@ -35,7 +33,8 @@ public class ClientProducer {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (ConnectionFactory)jndiContext.lookup(CONN_FACTORY);
+    		System.out.println("producer getting connection factory");
+           cf = (ConnectionFactory)jndiContext.lookup(Server.QUEUE_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -43,12 +42,14 @@ public class ClientProducer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(QUEUE_NAME);
+    		System.out.println("producer looking up destination queue");
+           dest = (Destination)jndiContext.lookup(Server.QUEUE_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
             System.exit(1);
         }
+		System.out.println("ClientProducer initialized");
     }
     
     /** create the connection, session, and send messages */
@@ -70,6 +71,7 @@ public class ClientProducer {
             message.setIntProperty(Actions.ACTION, action);
             
             prod.send(message);
+			System.out.println("CLIENT SENT MESSAGE");
         
             // send an empty message to indicate nothing more is coming
             //prod.send(sess.createMessage());

@@ -19,9 +19,6 @@ import javax.naming.*;
 import javax.jms.*;
 
 public class ServerPublisher {
-
-	private static final String TOPIC_NAME = "jms/Topic";
-	private static final String CONN_FACTORY = "jms/TopicConnection";
     
     private Context jndiContext; // JNDI context for looking up names
     private TopicConnectionFactory cf;
@@ -44,7 +41,7 @@ public class ServerPublisher {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(CONN_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.TOPIC_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -52,7 +49,7 @@ public class ServerPublisher {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(TOPIC_NAME);
+           dest = (Topic)jndiContext.lookup(Server.TOPIC_DEST);
            
            // create the connection
            conn = cf.createTopicConnection();

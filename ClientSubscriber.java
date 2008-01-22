@@ -11,9 +11,7 @@ import javax.jms.*;
  * 
  * @author  Adam Strong
  */
-public class ClientSubscriber {
-	private static final String TOPIC_NAME = "jms/Topic";
-	private final String CONN_FACTORY = "jms/TopicConnection";
+public class ClientSubscriber {;
     
     private Context jndiContext; // JNDI context for looking up names
     private TopicConnectionFactory cf;
@@ -32,7 +30,7 @@ public class ClientSubscriber {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(CONN_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.TOPIC_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -40,7 +38,7 @@ public class ClientSubscriber {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(TOPIC_NAME);
+           dest = (Topic)jndiContext.lookup(Server.TOPIC_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -68,6 +66,7 @@ public class ClientSubscriber {
 			
 			// start receiving messages
 			conn.start();
+			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + TOPIC_NAME);
 			
 			while(running) {
 				try {
