@@ -74,12 +74,12 @@ public class ClientSubscriber {;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}*/
+			}
 			
 			//close everything down
 			if (conn != null) {
 				conn.close();
-			}
+			}*/
 		}
 		catch(JMSException je) {
 		    System.out.println("Unable to close the connection: " + je.getMessage());
