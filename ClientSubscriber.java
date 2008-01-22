@@ -68,13 +68,13 @@ public class ClientSubscriber {;
 			conn.start();
 			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + Server.TOPIC_DEST);
 			
-			while(running) {
+			/*while(running) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
+			}*/
 			
 			//close everything down
 			if (conn != null) {

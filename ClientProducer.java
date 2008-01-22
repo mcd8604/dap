@@ -23,7 +23,6 @@ public class ClientProducer {
     public ClientProducer() {
         // get a JNDI naming context
         try {
-    		System.out.println("producer getting context");
             jndiContext = new InitialContext();
         }
         catch(NamingException ne){
@@ -33,7 +32,6 @@ public class ClientProducer {
         
         // set up a ConnectionFactory and destination
         try {
-    		System.out.println("producer getting connection factory");
            cf = (ConnectionFactory)jndiContext.lookup(Server.QUEUE_FACTORY);
         }
         catch(Exception exc) {
@@ -42,7 +40,6 @@ public class ClientProducer {
         }
         
         try{
-    		System.out.println("producer looking up destination queue");
            dest = (Destination)jndiContext.lookup(Server.QUEUE_DEST);
         }
         catch(Exception exc) {

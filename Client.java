@@ -43,6 +43,8 @@ public class Client implements ActionListener {
 		//listen to topic for server messages
 		subscriber = new ClientSubscriber();
 		subscriber.getMessages(this);
+		
+		gui = new ClientGUI(this);
 
 		producer = new ClientProducer();
 		
@@ -138,8 +140,7 @@ public class Client implements ActionListener {
 	 */
 	public static void main(String [] args) {
 		// Create and display GUI
-		Client c = new Client();
-		c.gui = new ClientGUI(c);		
+		Client c = new Client();		
 	}
 
 	public void isCustomer_Result(boolean isCustomer) {
