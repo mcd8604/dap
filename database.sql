@@ -7,7 +7,7 @@ use orderHandle;
 --
 
 CREATE TABLE Customer(
-   ID  INT,
+   ID  INT AUTO_INCREMENT,
    LastName  VARCHAR(50) NOT NULL,
    FirstName VARCHAR(50) NOT NULL,
    Address  VARCHAR(50) NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE Customer(
 ); 
 
 CREATE TABLE Ordr(
-   OrderID  INT,
+   OrderID  INT AUTO_INCREMENT,
    ID  INT,
    Completed  ENUM('y','n'),
    Total DOUBLE,
@@ -29,7 +29,7 @@ CREATE TABLE Ordr(
 );
 
 CREATE TABLE Supplier(
-   SupplierID  INT,
+   SupplierID  INT AUTO_INCREMENT,
    SupplierName  VARCHAR(50) NOT NULL,
    SupplierAddr  VARCHAR(50) NOT NULL,
    SupplierCity  VARCHAR(50) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE Supplier(
 
 
 CREATE TABLE Item(
-   ItemID  INT,
+   ItemID  INT AUTO_INCREMENT,
    ItemName VARCHAR(50),
    ItemDesc VARCHAR(200),
    SalePrice DOUBLE,
