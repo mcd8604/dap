@@ -166,8 +166,8 @@ public class DatabaseController {
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
-	            // TODO Evaluate results
-	            
+	            // Evaluate results
+	            ret = rs.next();
         	}        	
         } catch(SQLException e){
 			e.printStackTrace();
@@ -198,25 +198,27 @@ public class DatabaseController {
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
+        		// 1 - Insert New Customer
         		insertStatement = getInstance().conn.createStatement();  
 
 	            // TODO finish insert values
-	            sqlInsert = "INSERT INTO customer (FirstName, LastName) VALUES ('" + 
+	            sqlInsert = "INSERT INTO Customer (FirstName, LastName) VALUES ('" + 
 	            c.getFirstName() + "', '" + c.getLastName() + 
 	            "') WHERE Customer.ID = '" + c.getCustomerID() + "';";
 	            
-	            //if update
-            	if(insertStatement.execute(sqlInsert)) {
-            		queryStatement = getInstance().conn.createStatement(); 
-            		
-                	//TODO finish query to get recently created customer ID
-            		sqlQuery = "";
-            		
-            		//queryStatement.execute(sqlQuery);
-            		
-            		c.setCustomerID(0);
-                	ret = c;
-            	}
+	            insertStatement.execute(sqlInsert);
+	            
+	            // 2 - Get Customer ID
+        		queryStatement = getInstance().conn.createStatement(); 
+        		
+            	//TODO finish query to get recently created customer ID
+        		sqlQuery = "";
+        		
+        		queryStatement.execute(sqlQuery);
+        		rs = queryStatement.getResultSet();
+        		rs.next();
+	        	c.setCustomerID(rs.getInt(0));
+            	ret = c;
         	}
         } catch(SQLException e){
 			e.printStackTrace();
@@ -235,22 +237,37 @@ public class DatabaseController {
      */
     public static ArrayList<Item> getItems() {
     	ArrayList<Item> ret = new ArrayList<Item>();
-    	String sqlQuery = "SELECT * FROM item";
-    	try {
-			ArrayList<String> a = queryToArrayList(sqlQuery);
-			Iterator<String> iter = a.iterator();
-			while(iter.hasNext()) {
-				String i = iter.next();
-				System.out.println(i);
-				
-				// TODO Parse Strings into items
-				Item item = new Item(0, "", "", 0, 0);
-				ret.add(item);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		// *** do we need PreparedStatement?
+	            statement = getInstance().conn.createStatement(); 
+        		sqlQuery = "SELECT * FROM Item";
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				while(rs.next()) {
+					// Parse Strings into items			        
+		        	int id = rs.getInt("ItemID");
+		        	String name = rs.getString("ItemName");
+		        	String desc = rs.getString("ItemDesc");
+		        	double salePrice = rs.getDouble("SalePrice");
+		        	double supplierPrice = rs.getDouble("SupplierPrice");
+		        	
+					Item item = new Item(id, name, desc, salePrice, supplierPrice);
+					ret.add(item);
+				}
+        	}        	
+        } catch(SQLException e){
 			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
 		}
+        
 		return ret;
     }
 
@@ -262,10 +279,58 @@ public class DatabaseController {
      * @return the order that was added
      */
     public static Order createOrder(Order o) {
-    	//insert order
-    	//get orderid
-    	//insert all orderitems
-    	return null;
+    	ResultSet rs = null;
+
+    	Statement insertOrderStatement = null;
+    	String sqlInsertOrder = null;
+    	
+    	Statement getOrderIDStatement = null;
+    	String sqlGetOrderID = null;
+
+    	Statement insertOrderItemsStatement = null;
+    	String sqlInsertOrderItems = null;
+    	
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		// 1 - Insert New Order
+        		insertOrderStatement = getInstance().conn.createStatement();  
+
+        		sqlInsertOrder = "INSERT INTO Ordr (ID, Total) VALUES ('" + o.getCustomerID() + "', '" + o.getTotal() + "');";
+        		
+        		insertOrderStatement.execute(sqlInsertOrder);
+
+	            // 2 - Get Order ID
+        		getOrderIDStatement = getInstance().conn.createStatement(); 
+        		
+            	//TODO finish orderID query sql
+        		sqlGetOrderID = "SELECT ID FROM Ordr WHERE ";
+        		
+        		getOrderIDStatement.execute(sqlGetOrderID);
+        		rs = getOrderIDStatement.getResultSet();
+        		rs.next();
+        		int orderID = rs.getInt(0);
+	        	
+            	// 3 - Insert all OrderItems
+        		insertOrderItemsStatement = getInstance().conn.createStatement();  
+
+	            sqlInsertOrderItems = "";
+        		for(OrderItem oItem : o.getOrderItems()) {
+        			Item i = oItem.getItem();
+        			int itemID = i.getItemID();
+        			int quantity = oItem.getQuantity();
+        			sqlInsertOrderItems += "INSERT INTO OrderItem VALUES ('" + orderID + "','" + itemID + "','" + quantity + "'); ";
+        		}
+        		
+        		insertOrderItemsStatement.execute(sqlInsertOrderItems);        		
+        	}
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+        return o;
     }
 
     /**
