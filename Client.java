@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.BorderLayout;
 
-import server.*;
-
 /**
  * Client.  Acts as a Producer and Subscriber.
  * 
@@ -39,8 +37,7 @@ public class Client implements ActionListener {
 	/**
 	 * Initialize and display the GUI
 	 */
-	public Client(ClientGUI p_gui) {
-		this.gui = p_gui;
+	public Client() {
 		displayWelcome();
 
 		//listen to topic for server messages
@@ -141,7 +138,8 @@ public class Client implements ActionListener {
 	 */
 	public static void main(String [] args) {
 		// Create and display GUI
-		//new Client();
+		Client c = new Client();
+		c.gui = new ClientGUI(c);		
 	}
 
 	public void isCustomer_Result(boolean isCustomer) {

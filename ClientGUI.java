@@ -128,10 +128,10 @@ public class ClientGUI
 	/** 
 	* Creates new form NewJFrame 
 	*/
-	public ClientGUI() 
+	public ClientGUI(Client p_client) 
 	{
 		initComponents();
-		client = new Client(this);
+		client = p_client;
 		//TODO add 'client' as an ActionListener to any 
 		//GUI components that will make calls to the server 
   }
@@ -745,7 +745,7 @@ public class ClientGUI
 	 */
 	public static void main(String [] args) {
 		// Create and display GUI
-		new ClientGUI();
+		//new ClientGUI();
 	}
 	  
 	public void displayMessage(String message) {
