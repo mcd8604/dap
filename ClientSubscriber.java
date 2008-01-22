@@ -20,7 +20,7 @@ public class ClientSubscriber {
     private Topic dest;
     
     /** Creates a new instance of Consumer */
-    public ClientSubscriber(String destName) {
+    public ClientSubscriber() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -40,7 +40,7 @@ public class ClientSubscriber {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(destName);
+           dest = (Topic)jndiContext.lookup(TOPIC_NAME);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -49,7 +49,7 @@ public class ClientSubscriber {
     }
     
     /** get messages from the queue */
-    public void getMessages() {
+    public void getMessages(Client p_client) {
     	boolean running = true;
     	
 		try {
@@ -63,7 +63,7 @@ public class ClientSubscriber {
 			TopicSubscriber sub = sess.createSubscriber(dest);
 			
 			// Set up the listener
-			ClientObjectMessageListener cl = new ClientObjectMessageListener();
+			ClientObjectMessageListener cl = new ClientObjectMessageListener(p_client);
 			sub.setMessageListener(cl);
 			
 			// start receiving messages

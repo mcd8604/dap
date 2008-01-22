@@ -14,7 +14,11 @@ import javax.jms.*;
  */
 public class ClientObjectMessageListener implements MessageListener {
 	
-	public ClientObjectMessageListener() {}
+	private Client client;
+	
+	public ClientObjectMessageListener(Client p_client) {
+		this.client = p_client;
+	}
 	
 	public void onMessage(Message m) {
 		if(m != null) {
@@ -29,18 +33,22 @@ public class ClientObjectMessageListener implements MessageListener {
 	        		case Actions.IS_CUSTOMER:
 	                    boolean isCustomer = ((Boolean)message.getObject()).booleanValue();
 	                    // pass isCustomer back to Client
+	                    client.isCustomer_Result(isCustomer);
 	        			break;
 	        		case Actions.CREATE_CUSTOMER:
 	        			Customer customer = (Customer)message.getObject();
 	        			// pass customer back to Client
+	                    client.createCustomer_Result(customer);
 	        			break;
 	        		case Actions.GET_ITEMS:
 	        			ArrayList<Item> items = (ArrayList<Item>)message.getObject();
 	        			// pass items back to Client
+	                    client.getItems_Result(items);
 	        			break;
 	        		case Actions.CREATE_ORDER:
 	        			Order order = (Order)message.getObject();
 	        			// pass order back to Client
+	        			client.createOrder_Result(order);
 	        			break;
 	        	}
 			} catch (JMSException e) {

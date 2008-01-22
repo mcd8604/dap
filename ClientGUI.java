@@ -6,6 +6,7 @@ import java.awt.*;
  *
  * Created on January 18, 2008, 7:49 PM
  */
+import java.util.ArrayList;
  
  
  /**
@@ -15,6 +16,8 @@ import java.awt.*;
  
 public class ClientGUI
 {
+	private Client client;
+	
 	//all the private variables initalized
 	private JPanel holdsAll;
 	private JTabbedPane tabs;
@@ -128,6 +131,9 @@ public class ClientGUI
 	public ClientGUI() 
 	{
 		initComponents();
+		client = new Client(this);
+		//TODO add 'client' as an ActionListener to any 
+		//GUI components that will make calls to the server 
   }
   
   /**
@@ -740,5 +746,14 @@ public class ClientGUI
 	public static void main(String [] args) {
 		// Create and display GUI
 		new ClientGUI();
+	}
+	  
+	public void displayMessage(String message) {
+		javax.swing.JOptionPane.showMessageDialog(null, message);
+	}
+
+	public void populateItems(ArrayList<Item> items) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -23,7 +23,7 @@ public class ClientProducer {
     private Destination dest;
     
     /** Creates a new instance of Producer */
-    public ClientProducer(String destName) {
+    public ClientProducer() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -43,7 +43,7 @@ public class ClientProducer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(destName);
+           dest = (Destination)jndiContext.lookup(QUEUE_NAME);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());

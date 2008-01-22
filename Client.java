@@ -31,19 +31,27 @@ public class Client implements ActionListener {
 	//On user submit, send Order to Server via Queue
 	//Get response from Server via Topic
 	
-	private final String DESTINATION = "";
 	private ClientProducer producer;
+	private ClientSubscriber subscriber;
+	
+	private ClientGUI gui;
 	
 	/**
 	 * Initialize and display the GUI
 	 */
-	public Client() {
+	public Client(ClientGUI p_gui) {
+		this.gui = p_gui;
 		displayWelcome();
-		
-		producer = new ClientProducer(DESTINATION);
+
+		//listen to topic for server messages
+		subscriber = new ClientSubscriber();
+		subscriber.getMessages(this);
+
+		producer = new ClientProducer();
 		
 		//Ask server for list of items - used later
-		ArrayList<Object> items = getItems();
+		producer.sendMessage(null, Actions.GET_ITEMS);
+		//ArrayList<Object> items = getItems();
 		
 		System.out.println("Client created");
 	}
@@ -133,6 +141,32 @@ public class Client implements ActionListener {
 	 */
 	public static void main(String [] args) {
 		// Create and display GUI
-		new Client();
+		//new Client();
+	}
+
+	public void isCustomer_Result(boolean isCustomer) {
+		// TODO Auto-generated method stub
+		if(isCustomer) {
+			//ID is valid, continue with order
+		} else {
+			//ID is invalid, display message
+			gui.displayMessage("Invalid Customer ID, Please try again.");
+		}
+	}
+
+	public void createCustomer_Result(Customer customer) {
+		// TODO Auto-generated method stub
+		gui.displayMessage("Customer created successfully.");
+		//continue with order
+	}
+
+	public void getItems_Result(ArrayList<Item> items) {
+		// TODO Auto-generated method stub
+		gui.populateItems(items);
+	}
+
+	public void createOrder_Result(Order order) {
+		// TODO Auto-generated method stub
+		gui.displayMessage("Order created succesfully.");
 	}
 }
