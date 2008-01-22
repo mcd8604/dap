@@ -66,7 +66,7 @@ public class ClientSubscriber {;
 			
 			// start receiving messages
 			conn.start();
-			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + TOPIC_NAME);
+			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + Server.TOPIC_DEST);
 			
 			while(running) {
 				try {
