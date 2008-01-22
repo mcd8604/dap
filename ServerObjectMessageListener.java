@@ -15,7 +15,6 @@ public class ServerObjectMessageListener implements MessageListener {
         spub = p_spub;
 	}
 
-	@Override
 	public void onMessage(Message m) {
 		if(m != null) {
 			//System.out.println("MESSAGE RECEIVED: " + m.toString());
