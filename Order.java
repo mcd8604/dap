@@ -55,6 +55,7 @@ public class Order  implements Serializable {
     }
 
     public void setOrderItems(ArrayList<OrderItem> p_OrderItems) {
+    	orderItems = p_OrderItems;
     }
 }
 

@@ -14,7 +14,7 @@ public class DatabaseController {
     private static String DATASOURCE_DRIVER_CLASS = "com.mysql.jdbc.Driver";
     private static String DATASOURCE_URL = "jdbc:mysql://localhost:3306/" + CATALOG_NAME;
     private static String USERNAME = "root";
-    private static String PASSWORD = "";
+    private static String PASSWORD = "321321";
     
     //Sync object
     private static Object stmtLock = new Object();
@@ -201,23 +201,22 @@ public class DatabaseController {
         		// 1 - Insert New Customer
         		insertStatement = getInstance().conn.createStatement();  
 
-	            // TODO finish insert values
-	            sqlInsert = "INSERT INTO Customer (FirstName, LastName) VALUES ('" + 
-	            c.getFirstName() + "', '" + c.getLastName() + 
-	            "') WHERE Customer.ID = '" + c.getCustomerID() + "';";
+	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
+	            	" ('" + c.getFirstName() + 
+	            	"', '" + c.getLastName() + 
+	            	"', '" + c.getAddress() + 
+	            	"', '" + c.getCity() + 
+	            	"', '" + c.getState() + 
+	            	"', '" + c.getZipCode() + 
+	            	"', '" + c.getPhone() + 
+	            	"', '" + c.getemail() + "');";
 	            
-	            insertStatement.execute(sqlInsert);
-	            
-	            // 2 - Get Customer ID
-        		queryStatement = getInstance().conn.createStatement(); 
-        		
-            	//TODO finish query to get recently created customer ID
-        		sqlQuery = "";
-        		
-        		queryStatement.execute(sqlQuery);
-        		rs = queryStatement.getResultSet();
-        		rs.next();
-	        	c.setCustomerID(rs.getInt(0));
+	            insertStatement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+        		 
+	            // 2 - Return Customer with ID
+	            rs = insertStatement.getGeneratedKeys();
+	            rs.next();
+	        	c.setCustomerID(rs.getInt(1));
             	ret = c;
         	}
         } catch(SQLException e){
@@ -244,7 +243,6 @@ public class DatabaseController {
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
-        		// *** do we need PreparedStatement?
 	            statement = getInstance().conn.createStatement(); 
         		sqlQuery = "SELECT * FROM Item";
 	            statement.execute(sqlQuery);
@@ -283,9 +281,6 @@ public class DatabaseController {
 
     	Statement insertOrderStatement = null;
     	String sqlInsertOrder = null;
-    	
-    	Statement getOrderIDStatement = null;
-    	String sqlGetOrderID = null;
 
     	Statement insertOrderItemsStatement = null;
     	String sqlInsertOrderItems = null;
@@ -298,31 +293,23 @@ public class DatabaseController {
 
         		sqlInsertOrder = "INSERT INTO Ordr (ID, Total) VALUES ('" + o.getCustomerID() + "', '" + o.getTotal() + "');";
         		
-        		insertOrderStatement.execute(sqlInsertOrder);
-
+        		insertOrderStatement.executeUpdate(sqlInsertOrder, Statement.RETURN_GENERATED_KEYS);
+        		
 	            // 2 - Get Order ID
-        		getOrderIDStatement = getInstance().conn.createStatement(); 
-        		
-            	//TODO finish orderID query sql
-        		sqlGetOrderID = "SELECT ID FROM Ordr WHERE ";
-        		
-        		getOrderIDStatement.execute(sqlGetOrderID);
-        		rs = getOrderIDStatement.getResultSet();
-        		rs.next();
-        		int orderID = rs.getInt(0);
+	            rs = insertOrderStatement.getGeneratedKeys();
+	            rs.next();
+        		int orderID = rs.getInt(1);
 	        	
             	// 3 - Insert all OrderItems
-        		insertOrderItemsStatement = getInstance().conn.createStatement();  
-
-	            sqlInsertOrderItems = "";
         		for(OrderItem oItem : o.getOrderItems()) {
+            		insertOrderItemsStatement = getInstance().conn.createStatement(); 
         			Item i = oItem.getItem();
         			int itemID = i.getItemID();
         			int quantity = oItem.getQuantity();
-        			sqlInsertOrderItems += "INSERT INTO OrderItem VALUES ('" + orderID + "','" + itemID + "','" + quantity + "'); ";
-        		}
-        		
-        		insertOrderItemsStatement.execute(sqlInsertOrderItems);        		
+        			sqlInsertOrderItems = "INSERT INTO OrderItem VALUES ('" + orderID + "','" + itemID + "','" + quantity + "'); ";
+            		insertOrderItemsStatement.execute(sqlInsertOrderItems);	
+        		} 
+        			
         	}
         } catch(SQLException e){
 			e.printStackTrace();
@@ -339,11 +326,28 @@ public class DatabaseController {
     public static void main(String [] args) {
         String sqlQuery = "SELECT * FROM customer;";
         try {
-	          ArrayList<String> ret = DatabaseController.queryToArrayList(sqlQuery); 
-	          System.out.println("Results:");
-	          for (String s : ret) {
-	        	  System.out.println(s);
-	          }
+        	//TEST isCustomer
+        	//System.out.println(isCustomer(new Customer(1)));
+        	
+        	//TEST getItems
+        	ArrayList<Item> items = getItems();
+        	/*for(Item i : items) {
+        		System.out.println(i.getItemID());
+        	}*/
+        	
+        	//TEST createCustomer
+        	Customer c = new Customer("first", "last", "123 fake street", "cityville", "state", "12342", "(432) - 523 - 4567", "email@gmail.com");
+        	Customer c2 = createCustomer(c);
+        	//System.out.println(c2.getCustomerID());
+        	
+        	//TEST createOrder
+        	Order order = new Order(c2.getCustomerID(), 100);
+        	ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
+        	for(int i = 0; i < items.size(); i++) {
+        		orderItems.add(new OrderItem(items.get(i), i + 1));
+        	}
+        	order.setOrderItems(orderItems);
+        	createOrder(order);
         } catch(Exception ex) {
             ex.printStackTrace();
         }	
