@@ -46,11 +46,11 @@ public class Client implements ActionListener {
 
 		producer = new ClientProducer();
 		
+		System.out.println("Client created, requesting items from server...");
+		
 		//Ask server for list of items - used later
 		producer.sendMessage(null, Actions.GET_ITEMS);
 		//ArrayList<Object> items = getItems();
-		
-		System.out.println("Client created");
 	}
 	
 	/**

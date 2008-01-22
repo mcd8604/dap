@@ -21,6 +21,7 @@ public class ClientObjectMessageListener implements MessageListener {
 	}
 	
 	public void onMessage(Message m) {
+		System.out.println("CLIENT RECEIVED MESSAGE");
 		if(m != null) {
 			ObjectMessage message = (ObjectMessage)m;
         	
