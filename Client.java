@@ -2,11 +2,10 @@
  * Client.java
  *
  */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.*;
-import java.awt.BorderLayout;
 
 /**
  * Client.  Acts as a Producer and Subscriber.
@@ -14,35 +13,19 @@ import java.awt.BorderLayout;
  * @author Adam Strong and Mitalee Mixit
  */
 public class Client implements ActionListener {
-	
-	//GENERAL IDEA:
-	//Ask server for list of items - used later
-	//Check if existing customer or new (in UI)
-	//If existing, ask Server if customer exists - isCustomer(int id)
-		//If exists, display order screen
-		//If does not exist, re-prompt for existing versus new
-	//If new
-		//collect customer info through UI
-		//validate input
-		//ask Server to create customer - createCustomer(Customer c)
-	//Display order screen - populated with items
-	//On user submit, send Order to Server via Queue
-	//Get response from Server via Topic
-	
+
 	private ClientProducer producer;
 	private ClientSubscriber subscriber;
-	
 	private ClientGUI gui;
-	
+	private int custID;
 	public String cookieID;
 	
 	/**
 	 * Initialize and display the GUI
 	 */
 	public Client() {
-		displayWelcome();
-		
 		this.cookieID = CookieID.createCookieID();
+		this.custID = -1;
 
 		//listen to topic for server messages
 		subscriber = new ClientSubscriber();
@@ -56,45 +39,10 @@ public class Client implements ActionListener {
 		
 		//Ask server for list of items - used later
 		producer.sendMessage(null, Actions.GET_ITEMS, this.cookieID);
-		//ArrayList<Object> items = getItems();
 	}
 	
-	/**
-	 * Displayed to collect customer information.
-	 */
-	public void displayWelcome() {
-		// simple GUI for allowing the user to decide if they are 
-		// existing or new customer
-	}
-	
-	/**
-	 * Displayed to collect customer information.
-	 */
-	public void newCustomer() {
-		// GUI that gathers new customer info
-	}
-	
-	/**
-	 * Displayed to create Order.
-	 */
-	public void createOrder() {
-		// GUI to build order
-	}
-	
-	/**
-	 * Called to request the list of Order Items 
-	 * from the Server
-	 * 
-	 * @return list of items
-	 */
-	public ArrayList<Object> getItems() {
-		//Produce RequestMessage to Queue
-		producer.sendMessage(null, Actions.GET_ITEMS, this.cookieID);
-		
-		//Receive ResponseMessage from Topic
-		
-		
-		return new ArrayList<Object>();
+	public int getCustID() {
+		return custID;
 	}
 	
 	/**
@@ -104,36 +52,20 @@ public class Client implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("existing customer")) {
 			//If existing, ask Server if customer exists
-			//Produce RequestMessage to Queue
-			int id = 0;
+			int id = gui.getCustomerID();
 			producer.sendMessage(id, Actions.IS_CUSTOMER, this.cookieID);
-			
-			//Receive ResponseMessage from Topic
-				//If exists, display order screen
-					//createOrder();
-				//If does not exist, re-prompt for existing vs new
-					//displayWelcome();
-			
 		} else if (e.getActionCommand().equals("new customer")) {
-			//If new
-				//collect customer info through UI
-				//validate input
-				//ask Server to create customer - createCustomer(Customer c)
-					//Produce RequestMessage to Queue
-					Customer customer = null;
-					producer.sendMessage(customer, Actions.CREATE_CUSTOMER, this.cookieID);
-			
-					//Receive ResponseMessage from Topic
-				//display order screen
-				//createOrder();
+			if (gui.validateCustomer()) {
+				//ask Server to create customer
+				Customer customer = gui.getCustomer();
+				producer.sendMessage(customer, Actions.CREATE_CUSTOMER, this.cookieID);
+			}
 		} else if (e.getActionCommand().equals("submit order")) {
-			//validate order
-			
-			//Send Order to Server via Queue
-			Order order = null;
-			producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
-			
-			//Get response from Server via Topic
+			//TODO possibly move this based on Mitalee's answer
+			if (gui.validateOrder()) {
+				Order order = gui.getOrder();
+				producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
+			}
 		}
 	}
 	
@@ -144,13 +76,14 @@ public class Client implements ActionListener {
 	 */
 	public static void main(String [] args) {
 		// Create and display GUI
-		Client c = new Client();		
+		new Client();		
 	}
 
 	public void isCustomer_Result(boolean isCustomer) {
 		// TODO Auto-generated method stub
 		if(isCustomer) {
-			//ID is valid, continue with order
+			//ID is valid, save ID
+			custID = gui.getCustomerID();
 		} else {
 			//ID is invalid, display message
 			gui.displayMessage("Invalid Customer ID, Please try again.");
@@ -158,16 +91,13 @@ public class Client implements ActionListener {
 	}
 
 	public void createCustomer_Result(Customer customer) {
-		// TODO Auto-generated method stub
+		custID = customer.getCustomerID();
 		gui.displayMessage("Customer created successfully.");
-		//continue with order
+		
+		//TODO some switch allow the user to now create order?
 	}
 
 	public void getItems_Result(ArrayList<Item> items) {
-		// TODO Auto-generated method stub
-		for(Item i : items) {
-			System.out.println(i.toString());
-		}
 		gui.populateItems(items);
 	}
 
