@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class ClientGUI
 {
 	private Client client;
+	private final int NUM_PANELS = 10;
 	
 	//all the private variables initalized
 	private JPanel holdsAll;
@@ -65,62 +66,13 @@ public class ClientGUI
 	private JLabel itemLabel;
 	private JLabel qtyLabel2;
 	private JLabel itemLabel2;
-	private JTextField qtyInput1;
-	private JComboBox itemInput1;
-	private JTextField qtyInput2;
-	private JComboBox itemInput2;
-	private JTextField qtyInput3;
-	private JComboBox itemInput3;
-	private JTextField qtyInput4;
-	private JComboBox itemInput4;
-	private JTextField qtyInput5;
-	private JComboBox itemInput5;
-	private JTextField qtyInput6;
-	private JComboBox itemInput6;
-	private JTextField qtyInput7;
-	private JComboBox itemInput7;
-	private JTextField qtyInput8;
-	private JComboBox itemInput8;
-	private JTextField qtyInput9;
-	private JComboBox itemInput9;
-	private JTextField qtyInput11;
-	private JComboBox itemInput11;
-	private JTextField qtyInput12;
-	private JComboBox itemInput12;
-	private JTextField qtyInput13;
-	private JComboBox itemInput13;
-	private JTextField qtyInput14;
-	private JComboBox itemInput14;
-	private JTextField qtyInput15;
-	private JComboBox itemInput15;
-	private JTextField qtyInput16;
-	private JComboBox itemInput16;
-	private JTextField qtyInput17;
-	private JComboBox itemInput17;
-	private JTextField qtyInput18;
-	private JComboBox itemInput18;
-	private JTextField qtyInput19;
-	private JComboBox itemInput19;
+	
+	private ArrayList<JTextField> quantities;
+	private ArrayList<JComboBox> orderitems;
+	private ArrayList<JTextField> quantities2;
+	private ArrayList<JComboBox> orderitems2;
 	private JPanel orderLabelPanel;
 	private JPanel orderLabelPanel2;
-	private JPanel orderInputPanel1;
-	private JPanel orderInputPanel2;
-	private JPanel orderInputPanel3;
-	private JPanel orderInputPanel4;
-	private JPanel orderInputPanel5;
-	private JPanel orderInputPanel6;
-	private JPanel orderInputPanel7;
-	private JPanel orderInputPanel8;
-	private JPanel orderInputPanel9;
-	private JPanel orderInputPanel11;
-	private JPanel orderInputPanel12;
-	private JPanel orderInputPanel13;
-	private JPanel orderInputPanel14;
-	private JPanel orderInputPanel15;
-	private JPanel orderInputPanel16;
-	private JPanel orderInputPanel17;
-	private JPanel orderInputPanel18;
-	private JPanel orderInputPanel19;
 	private JLabel existingLabel;
 	private JTextField existingInput;
 	private JPanel existingPanel;
@@ -131,6 +83,14 @@ public class ClientGUI
 	public ClientGUI(Client p_client) {
 		initComponents();
 		client = p_client;
+	}
+	
+	public ClientGUI() {
+		initComponents();
+	}
+	
+	public static void main(String[] args) {
+		new ClientGUI();
 	}
 
 	/**
@@ -163,35 +123,19 @@ public class ClientGUI
 		optionalPanel = new JPanel();
 		optionalInputPanel = new JPanel();
 		infoPanel = new JPanel();
+		
+
 		orderLabelPanel = new JPanel();
 		orderLabelPanel2 = new JPanel();
-		orderInputPanel1 = new JPanel();
-		orderInputPanel2 = new JPanel();
-		orderInputPanel3 = new JPanel();
-		orderInputPanel4 = new JPanel();
-		orderInputPanel5 = new JPanel();
-		orderInputPanel6 = new JPanel();
-		orderInputPanel7 = new JPanel();
-		orderInputPanel8 = new JPanel();
-		orderInputPanel9 = new JPanel();
-		orderInputPanel11 = new JPanel();
-		orderInputPanel12 = new JPanel();
-		orderInputPanel13 = new JPanel();
-		orderInputPanel14 = new JPanel();
-		orderInputPanel15 = new JPanel();
-		orderInputPanel16 = new JPanel();
-		orderInputPanel17 = new JPanel();
-		orderInputPanel18 = new JPanel();
-		orderInputPanel19 = new JPanel();
 		existingPanel = new JPanel();
 
 		//creates the buttons
 		submit = new JButton("Submit");
 		submit.addActionListener(client);
-		submit.setActionCommand("new customer");
+		submit.setActionCommand("new customer submit");
 		submit2 = new JButton("Submit");
 		submit2.addActionListener(client);
-		submit2.setActionCommand("existing customer");
+		submit2.setActionCommand("existing customer submit");
 
 		//creates all the labels
 		firstNameLabel = new JLabel();
@@ -221,24 +165,6 @@ public class ClientGUI
 		zipInput = new JTextField(5);
 		phoneInput = new JTextField(12);
 		emailInput = new JTextField(25);
-		qtyInput1 = new JTextField(2);
-		qtyInput2 = new JTextField(2);
-		qtyInput3 = new JTextField(2);
-		qtyInput4 = new JTextField(2);
-		qtyInput5 = new JTextField(2);
-		qtyInput6 = new JTextField(2);
-		qtyInput7 = new JTextField(2);
-		qtyInput8 = new JTextField(2);
-		qtyInput9 = new JTextField(2);
-		qtyInput11 = new JTextField(2);
-		qtyInput12 = new JTextField(2);
-		qtyInput13 = new JTextField(2);
-		qtyInput14 = new JTextField(2);
-		qtyInput15 = new JTextField(2);
-		qtyInput16 = new JTextField(2);
-		qtyInput17 = new JTextField(2);
-		qtyInput18 = new JTextField(2);
-		qtyInput19 = new JTextField(2);
 		existingInput = new JTextField(20);
 
 		//creates the state selections
@@ -251,24 +177,6 @@ public class ClientGUI
 
 		//creates the combo box for the state input
 		stateInput = new JComboBox(stateStrings);
-		itemInput1 = new JComboBox();
-		itemInput2 = new JComboBox();
-		itemInput3 = new JComboBox();
-		itemInput4 = new JComboBox();
-		itemInput5 = new JComboBox();
-		itemInput6 = new JComboBox();
-		itemInput7 = new JComboBox();
-		itemInput8 = new JComboBox();
-		itemInput9 = new JComboBox();
-		itemInput11 = new JComboBox();
-		itemInput12 = new JComboBox();
-		itemInput13 = new JComboBox();
-		itemInput14 = new JComboBox();
-		itemInput15 = new JComboBox();
-		itemInput16 = new JComboBox();
-		itemInput17 = new JComboBox();
-		itemInput18 = new JComboBox();
-		itemInput19 = new JComboBox();
 
 		//sets the texts for the labels
 		firstNameLabel.setText("                   First name*");
@@ -468,246 +376,62 @@ public class ClientGUI
 		orderLabelPanel2.add(qtyLabel2);
 
 		//adds all the items to the orderInputPanel1
-		orderInputPanel1.add(itemInput1);
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(new JPanel());
-		orderInputPanel1.add(qtyInput1);
-
-		//adds all the items to the orderInputPanel2
-		orderInputPanel2.add(itemInput2);
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(new JPanel());
-		orderInputPanel2.add(qtyInput2);
-
-		//adds all the items to the orderInputPanel3
-		orderInputPanel3.add(itemInput3);
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(new JPanel());
-		orderInputPanel3.add(qtyInput3);
-
-		//adds all the items to the orderInputPanel4
-		orderInputPanel4.add(itemInput4);
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(new JPanel());
-		orderInputPanel4.add(qtyInput4);
-
-		//adds all the items to the orderInputPanel5
-		orderInputPanel5.add(itemInput5);
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(new JPanel());
-		orderInputPanel5.add(qtyInput5);
-
-		//adds all the items to the orderInputPanel6
-		orderInputPanel6.add(itemInput6);
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(new JPanel());
-		orderInputPanel6.add(qtyInput6);
-
-		//adds all the items to the orderInputPanel7
-		orderInputPanel7.add(itemInput7);
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(new JPanel());
-		orderInputPanel7.add(qtyInput7);
-
-		//adds all the items to the orderInputPanel8
-		orderInputPanel8.add(itemInput8);
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(new JPanel());
-		orderInputPanel8.add(qtyInput8);
-
-		//adds all the items to the orderInputPanel9
-		orderInputPanel9.add(itemInput9);
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(new JPanel());
-		orderInputPanel9.add(qtyInput9);
-
-		//adds all the items to the orderInputPanel1
-		orderInputPanel11.add(itemInput11);
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(new JPanel());
-		orderInputPanel11.add(qtyInput11);
-
-		//adds all the items to the orderInputPanel2
-		orderInputPanel12.add(itemInput12);
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(new JPanel());
-		orderInputPanel12.add(qtyInput12);
-
-		//adds all the items to the orderInputPanel3
-		orderInputPanel13.add(itemInput13);
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(new JPanel());
-		orderInputPanel13.add(qtyInput13);
-
-		//adds all the items to the orderInputPanel4
-		orderInputPanel14.add(itemInput14);
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(new JPanel());
-		orderInputPanel14.add(qtyInput14);
-
-		//adds all the items to the orderInputPanel5
-		orderInputPanel15.add(itemInput15);
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(new JPanel());
-		orderInputPanel15.add(qtyInput15);
-
-		//adds all the items to the orderInputPanel6
-		orderInputPanel16.add(itemInput16);
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(new JPanel());
-		orderInputPanel16.add(qtyInput16);
-
-		//adds all the items to the orderInputPanel7
-		orderInputPanel17.add(itemInput17);
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(new JPanel());
-		orderInputPanel17.add(qtyInput17);
-
-		//adds all the items to the orderInputPanel8
-		orderInputPanel18.add(itemInput18);
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(new JPanel());
-		orderInputPanel18.add(qtyInput18);
-
-		//adds all the items to the orderInputPanel19
-		orderInputPanel19.add(itemInput19);
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(new JPanel());
-		orderInputPanel19.add(qtyInput19);
-
-		//adds items to orderPanel
-		orderPanel.setLayout(new GridLayout(10, 1));
+		orderPanel.setLayout(new GridLayout(NUM_PANELS+1, 1));
 		orderPanel.add(orderLabelPanel);
-		orderPanel.add(orderInputPanel1);
-		orderPanel.add(orderInputPanel2);
-		orderPanel.add(orderInputPanel3);
-		orderPanel.add(orderInputPanel4);
-		orderPanel.add(orderInputPanel5);
-		orderPanel.add(orderInputPanel6);
-		orderPanel.add(orderInputPanel7);
-		orderPanel.add(orderInputPanel8);
-		orderPanel.add(orderInputPanel9);
-
-		//adds items to orderPanel2
-		orderPanel2.setLayout(new GridLayout(10, 1));
+		
+		quantities = new ArrayList<JTextField>();
+		orderitems = new ArrayList<JComboBox>();
+		
+		for (int i=0; i<NUM_PANELS; i++) {
+			JTextField text = new JTextField(2);
+			JComboBox combo = new JComboBox();
+			
+			quantities.add(text);
+			orderitems.add(combo);
+			
+			JPanel panel = new JPanel();
+			panel.add(combo);
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(text);
+			
+			orderPanel.add(panel);
+		}
+		
+		//adds all the items to the orderInputPanel2
+		orderPanel2.setLayout(new GridLayout(NUM_PANELS+1, 1));
 		orderPanel2.add(orderLabelPanel2);
-		orderPanel2.add(orderInputPanel11);
-		orderPanel2.add(orderInputPanel12);
-		orderPanel2.add(orderInputPanel13);
-		orderPanel2.add(orderInputPanel14);
-		orderPanel2.add(orderInputPanel15);
-		orderPanel2.add(orderInputPanel16);
-		orderPanel2.add(orderInputPanel17);
-		orderPanel2.add(orderInputPanel18);
-		orderPanel2.add(orderInputPanel19);
+		
+		quantities2 = new ArrayList<JTextField>();
+		orderitems2 = new ArrayList<JComboBox>();
+		
+		for (int i=0; i<NUM_PANELS; i++) {
+			JTextField text = new JTextField(2);
+			JComboBox combo = new JComboBox();
+			
+			quantities2.add(text);
+			orderitems2.add(combo);
+			
+			JPanel panel = new JPanel();
+			panel.add(combo);
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(new JPanel());
+			panel.add(text);
+			
+			orderPanel2.add(panel);
+		}
 
 		//adds all the items to existingPanel
 		existingPanel.setLayout(new GridLayout(11, 1));
@@ -745,20 +469,43 @@ public class ClientGUI
 		//Display the window
 		clientFrame.setVisible(true);
 	}
-
-	public void displayMessage(String message) {
-		javax.swing.JOptionPane.showMessageDialog(null, message);
-	}
-
-	public void populateItems(ArrayList<Item> items) {
-		// TODO Auto-generated method stub
-		// how do we do this if there are more than 19 items?....
-	}
 	
 	public int getCustomerID() {
 		return Integer.parseInt(existingInput.getText());
 	}
+
+	/**
+	 * Display a message to the user.
+	 * 
+	 * @param message Message to display
+	 */
+	public void displayMessage(String message) {
+		javax.swing.JOptionPane.showMessageDialog(null, message);
+	}
+
+	/**
+	 * Populate the JComboBoxes with the possible items.
+	 * 
+	 * @param items List of items from Server
+	 */
+	public void populateItems(ArrayList<Item> items) {
+		// Populate both tabs
+		for (Item item : items) {
+			for (JComboBox combo : orderitems) {
+				combo.addItem(item);
+			}
+			for (JComboBox combo : orderitems2) {
+				combo.addItem(item);
+			}
+		}
+	}
 	
+	/**
+	 * Validate the information the user has 
+	 * supplied to create a new customer.
+	 * 
+	 * @return true if valid, false otherwise.
+	 */
 	public boolean validateCustomer() {
 		boolean valid = true;
 		String errmsg = "Error(s):\n";
@@ -788,6 +535,12 @@ public class ClientGUI
 		return valid;
 	}
 	
+	/**
+	 * Assumes the user input is valid.  Constructs
+	 * a Customer object out of the user data.
+	 * 
+	 * @return new Customer
+	 */
 	public Customer getCustomer() {
 		Customer c = null;
 		
@@ -805,27 +558,113 @@ public class ClientGUI
 		return c;
 	}
 	
-	public boolean validateOrder() {
+	/**
+	 * Validate the order for either a new customer or 
+	 * existing customer.  Boolean parameter specifies 
+	 * which tab to use (new customer vs. existing).
+	 * 
+	 * @param newCustomer true if using new customer tab, 
+	 * 			false if using existing customer tab
+	 * @return true if data is valid, false otherwise
+	 */
+	public boolean validateOrder(boolean newCustomer) {
 		boolean valid = true;
 		String errmsg = "Error(s):\n";
 		
-		//TODO check that no negative #'s were input into any of the boxes
-		//how can we loop through these?
-			
+		// Validate only the data on the correct tab
+		if (newCustomer) {
+			for (JTextField text : quantities) {
+				String quantity = text.getText();
+				
+				try {
+					int iQuantity = Integer.parseInt(quantity);
+					if (iQuantity <= 0) {
+						errmsg += "- Value must be 1 or more\n";
+						valid = false;
+					}
+				} catch (NumberFormatException e) {
+					errmsg += "- Value must be an integer\n";
+					valid = false;
+				}
+			}
+		} else {
+			for (JTextField text : quantities2) {
+				String quantity = text.getText();
+				
+				try {
+					int iQuantity = Integer.parseInt(quantity);
+					if (iQuantity <= 0) {
+						errmsg += "- Value must be 1 or more\n";
+						valid = false;
+					}
+				} catch (NumberFormatException e) {
+					errmsg += "- Value must be an integer\n";
+					valid = false;
+				}
+			}
+		}
+		
 		if (!valid) displayMessage(errmsg);
 		
 		return valid;
 	}
 	
+	/**
+	 * Get the Order from the existing customer tab.
+	 * 
+	 * @return the Order
+	 */
 	public Order getOrder() {
+		int id = getCustomerID();
+		return getOrder(id, false);
+	}
+	
+	/**
+	 * Get the Order from the new customer tab.
+	 * 
+	 * @param id ID of the new customer
+	 * @return the Order
+	 */
+	public Order getOrder(int id) {
+		return getOrder(id, true);
+	}
+	
+	/**
+	 * Assumes the Order data is valid.  Returns the Order
+	 * supplied by the user.  Boolean flag indicates whether 
+	 * to use the new customer tab or the existing customer tab.
+	 * 
+	 * @param custID ID of the customer to be used in Order
+	 * @param newCustomer true if using new customer tab, 
+	 * 			false if using existing customer tab
+	 * @return the Order
+	 */
+	public Order getOrder(int custID, boolean newCustomer) {
 		Order o = null;
-		int total = 0;
+		float total = 0.0f;
 		
-		//TODO finish this loop - how loop?
-		//add each OrderItem to items and increment total
 		ArrayList<OrderItem> items = new ArrayList<OrderItem>();
 		
-		o = new Order(client.getCustID(), total);
+		// Validate only the data on the correct tab
+		if (newCustomer) {
+			for (int i=0; i<NUM_PANELS; i++) {
+				Item item = (Item)((JComboBox)orderitems.get(i)).getSelectedItem();
+				int quantity = Integer.parseInt(quantities.get(i).getText());
+				
+				items.add(new OrderItem(item, quantity));
+				total += quantity * item.getSalePrice();
+			}
+		} else {
+			for (int i=0; i<NUM_PANELS; i++) {
+				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
+				int quantity = Integer.parseInt(quantities2.get(i).getText());
+				
+				items.add(new OrderItem(item, quantity));
+				total += quantity * item.getSalePrice();
+			}
+		}
+		
+		o = new Order(custID, total);
 		o.setOrderItems(items);
 		
 		return o;
