@@ -95,7 +95,11 @@ public class Client implements ActionListener {
 
 	public void createOrder_Result(Order order) {
 		// TODO Need to know if success or failure and report to user
-		gui.displayMessage("Order created successfully.");
+		if(order.getCompleted()) {
+			gui.displayMessage("Order created successfully.");
+		} else {
+			//display error
+		}
 	}
 	
 	

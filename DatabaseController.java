@@ -14,7 +14,7 @@ public class DatabaseController {
     private static String DATASOURCE_DRIVER_CLASS = "com.mysql.jdbc.Driver";
     private static String DATASOURCE_URL = "jdbc:mysql://localhost:3306/" + CATALOG_NAME;
     private static String USERNAME = "root";
-    private static String PASSWORD = "321321";
+    private static String PASSWORD = "";
     
     //Sync object
     private static Object stmtLock = new Object();
@@ -288,6 +288,7 @@ public class DatabaseController {
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
+        		o.setCompleted(false);
         		// 1 - Insert New Order
         		insertOrderStatement = getInstance().conn.createStatement();  
 
@@ -309,7 +310,7 @@ public class DatabaseController {
         			sqlInsertOrderItems = "INSERT INTO OrderItem VALUES ('" + orderID + "','" + itemID + "','" + quantity + "'); ";
             		insertOrderItemsStatement.execute(sqlInsertOrderItems);	
         		} 
-        			
+        		o.setCompleted(true);
         	}
         } catch(SQLException e){
 			e.printStackTrace();

@@ -24,6 +24,8 @@ public class Order  implements Serializable {
     private float total;
     private ArrayList<OrderItem> orderItems;
 
+	private boolean completed;
+
     /** Creates a new instance of Order */
     public Order(int p_customerID, float p_total) {
       customerID = p_customerID;
@@ -57,5 +59,14 @@ public class Order  implements Serializable {
     public void setOrderItems(ArrayList<OrderItem> p_OrderItems) {
     	orderItems = p_OrderItems;
     }
+
+	public void setCompleted(boolean b) {
+		// TODO Auto-generated method stub
+		completed = b;
+	}
+	
+	public Boolean getCompleted() {
+		return completed;
+	}
 }
 

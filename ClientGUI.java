@@ -492,10 +492,10 @@ public class ClientGUI
 		// Populate both tabs
 		for (Item item : items) {
 			for (JComboBox combo : orderitems) {
-				combo.addItem(item);
+				combo.addItem(item.getItemName());
 			}
 			for (JComboBox combo : orderitems2) {
-				combo.addItem(item);
+				combo.addItem(item.getItemName());
 			}
 		}
 	}
