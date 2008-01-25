@@ -13,14 +13,14 @@ import javax.jms.*;
  * 
  * @author  Adam Strong
  */
-public class ClientProducer {
+public class ClientPublisher {
     
     private Context jndiContext; // JNDI context for looking up names
-    private ConnectionFactory cf;
-    private Destination dest;
+    private TopicConnectionFactory cf;
+    private Topic dest;
     
     /** Creates a new instance of Producer */
-    public ClientProducer() {
+    public ClientPublisher() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -32,7 +32,7 @@ public class ClientProducer {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (ConnectionFactory)jndiContext.lookup(Server.QUEUE_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.CLIENT_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -40,7 +40,7 @@ public class ClientProducer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(Server.QUEUE_DEST);
+           dest = (Topic)jndiContext.lookup(Server.CLIENT_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -54,13 +54,13 @@ public class ClientProducer {
     public void sendMessage(Serializable object, int action, String cookieID) {
         try {
             // create the connection
-            Connection conn = cf.createConnection();
+        	TopicConnection conn = cf.createTopicConnection();
         
             // create the session
-            Session sess = conn.createSession(false,Session.AUTO_ACKNOWLEDGE);
+            TopicSession sess = conn.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
         
             // create a producer
-            MessageProducer prod = sess.createProducer(dest);
+            MessageProducer prod = sess.createPublisher(dest);
         
             // create an object message
             ObjectMessage message = sess.createObjectMessage(object);

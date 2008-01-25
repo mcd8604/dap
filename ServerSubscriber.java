@@ -14,22 +14,20 @@ import java.util.Scanner;
 import javax.naming.*;
 import javax.jms.*;
 
-public class ServerConsumer {
-     private final String QUEUE_NAME = "jms/Queue";
-     private final String CONN_FACTORY = "jms/QueueConnection";
-    
+public class ServerSubscriber {    
     private Context jndiContext; // JNDI context for looking up names
-    private ConnectionFactory cf;
-    private Destination dest;
+    private TopicConnectionFactory cf;
+    private Topic dest;
     
-    private Connection conn;
-    private Session sess;
+    private TopicConnection conn;
+    private TopicSession sess;
     private MessageConsumer cons;
     
     private ServerPublisher spub;
     
-    /** Creates a new instance of ServerConsumer*/
-    public ServerConsumer() {
+    /** Creates a new instance of ServerConsumer
+     * @param p_sPub */
+    public ServerSubscriber() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -41,7 +39,7 @@ public class ServerConsumer {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (ConnectionFactory)jndiContext.lookup(Server.QUEUE_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.CLIENT_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -49,7 +47,7 @@ public class ServerConsumer {
         }
         
         try{
-           dest = (Destination)jndiContext.lookup(Server.QUEUE_DEST);
+           dest = (Topic)jndiContext.lookup(Server.CLIENT_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -57,23 +55,20 @@ public class ServerConsumer {
         }
     }
     
-    public void start() {
+    public void start(ServerPublisher spub) {
         // create the connection
         try {
-			conn = cf.createConnection();
-    
-	        // create the session
-	        sess = conn.createSession(false,Session.AUTO_ACKNOWLEDGE);
-	    
-	        // create a consumer (queue receiver)
-	        cons = sess.createConsumer(dest);
-	        
-	        // create a publisher (topic sender)
-	        spub = new ServerPublisher();
-	        
+			conn = cf.createTopicConnection();
+
+			// create the session
+			sess = conn.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			
+			// create a producer
+			cons = sess.createSubscriber(dest);
+			
 	        // set the message listener
 	        cons.setMessageListener(new ServerObjectMessageListener(spub));
-	    
+	        
 	        // start receiving messages
 	        conn.start();
 		} catch (JMSException e) {
@@ -93,23 +88,5 @@ public class ServerConsumer {
 				e.printStackTrace();
 			}
         }
-    }
-    
-    /**
-     * Start the ServerConsumer, getting the destination from the command line args
-     */
-    public static void main(String [] args){        
-        // create the ServerConsumer
-        ServerConsumer scon = new ServerConsumer();
-        scon.start();
-        
-        //loop this until user enters input
-        Scanner s = new Scanner(System.in);
-        System.out.println("To exit, type 'exit' then hit enter.");
-        
-        while(!s.hasNext()) {
-        }
-        
-        scon.close();
     }
 }

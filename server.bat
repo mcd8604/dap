@@ -1,1 +1,1 @@
-appclient ServerConsumer
+appclient Server

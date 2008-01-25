@@ -41,7 +41,7 @@ public class ServerPublisher {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(Server.TOPIC_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.UPDATER_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -49,7 +49,7 @@ public class ServerPublisher {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(Server.TOPIC_DEST);
+           dest = (Topic)jndiContext.lookup(Server.UPDATER_DEST);
            
            // create the connection
            conn = cf.createTopicConnection();

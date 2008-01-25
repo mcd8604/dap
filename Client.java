@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class Client {
 
-	private ClientProducer producer;
+	private ClientPublisher producer;
 	private ClientSubscriber subscriber;
 	private ClientGUI gui;
 	public String cookieID;
@@ -32,7 +32,7 @@ public class Client {
 		
 		gui = new ClientGUI(this);
 
-		producer = new ClientProducer();
+		producer = new ClientPublisher();
 		
 		System.out.println("Client created, requesting items from server...");
 		

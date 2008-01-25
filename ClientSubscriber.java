@@ -30,7 +30,7 @@ public class ClientSubscriber {;
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(Server.TOPIC_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Server.UPDATER_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -38,7 +38,7 @@ public class ClientSubscriber {;
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(Server.TOPIC_DEST);
+           dest = (Topic)jndiContext.lookup(Server.UPDATER_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -66,7 +66,7 @@ public class ClientSubscriber {;
 			
 			// start receiving messages
 			conn.start();
-			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + Server.TOPIC_DEST);
+			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + Server.UPDATER_DEST);
 			
 			/*while(running) {
 				try {
