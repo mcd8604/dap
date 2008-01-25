@@ -70,9 +70,9 @@ public class ClientGUI
 	private JLabel qtyLabel2;
 	private JLabel itemLabel2;
 	
-	private ArrayList<JTextField> quantities;
+	private ArrayList<JSpinner> quantities;
 	private ArrayList<JComboBox> orderitems;
-	private ArrayList<JTextField> quantities2;
+	private ArrayList<JSpinner> quantities2;
 	private ArrayList<JComboBox> orderitems2;
 	private JPanel orderLabelPanel;
 	private JPanel orderLabelPanel2;
@@ -388,12 +388,13 @@ public class ClientGUI
 		//adds all the items to the orderInputPanel1
 		orderPanel.setLayout(new GridLayout(NUM_PANELS+1, 1));
 		orderPanel.add(orderLabelPanel);
-		
-		quantities = new ArrayList<JTextField>();
+
+		quantities = new ArrayList<JSpinner>();
 		orderitems = new ArrayList<JComboBox>();
 		
 		for (int i=0; i<NUM_PANELS; i++) {
-			JTextField text = new JTextField(2);
+			SpinnerModel sm = new SpinnerNumberModel(0, 0, 99, 1);
+			JSpinner text = new JSpinner(sm);
 			JComboBox combo = new JComboBox();
 			
 			quantities.add(text);
@@ -418,11 +419,12 @@ public class ClientGUI
 		orderPanel2.setLayout(new GridLayout(NUM_PANELS+1, 1));
 		orderPanel2.add(orderLabelPanel2);
 		
-		quantities2 = new ArrayList<JTextField>();
+		quantities2 = new ArrayList<JSpinner>();
 		orderitems2 = new ArrayList<JComboBox>();
 		
 		for (int i=0; i<NUM_PANELS; i++) {
-			JTextField text = new JTextField(2);
+			SpinnerModel sm = new SpinnerNumberModel(0, 0, 99, 1);
+			JSpinner text = new JSpinner(sm);
 			JComboBox combo = new JComboBox();
 			
 			quantities2.add(text);
@@ -588,6 +590,35 @@ public class ClientGUI
 		
 		return c;
 	}
+
+	public boolean validateQuantity(boolean newCustomer) {
+		boolean valid = false;
+		String errmsg = "Error:\n Your order must contain a total quantity greater than 0.";
+		ArrayList<JSpinner> spinners = null;
+		
+		// Validate only the data on the correct tab
+		if (newCustomer) {
+			spinners = quantities;
+		} else {
+			spinners = quantities2;
+		}
+		for (JSpinner spinner : spinners) {
+			String quantity = spinner.getValue().toString();
+			try {
+				int iQuantity = Integer.parseInt(quantity);
+				if(iQuantity > 0) {
+					valid = true;
+					break;
+				}
+			} catch (NumberFormatException e) {
+				valid = false;
+			}
+		}
+		
+		if (!valid) displayMessage(errmsg);
+		
+		return valid;
+	}
 	
 	/**
 	 * Validate the order for either a new customer or 
@@ -604,8 +635,8 @@ public class ClientGUI
 		
 		// Validate only the data on the correct tab
 		if (newCustomer) {
-			for (JTextField text : quantities) {
-				String quantity = text.getText();
+			for (JSpinner text : quantities) {
+				String quantity = text.getValue().toString();
 				
 				try {
 					int iQuantity = Integer.parseInt(quantity);
@@ -619,8 +650,8 @@ public class ClientGUI
 				}
 			}
 		} else {
-			for (JTextField text : quantities2) {
-				String quantity = text.getText();
+			for (JSpinner text : quantities2) {
+				String quantity = text.getValue().toString();
 				
 				try {
 					int iQuantity = Integer.parseInt(quantity);
@@ -675,41 +706,26 @@ public class ClientGUI
 		float total = 0.0f;
 		
 		ArrayList<OrderItem> items = new ArrayList<OrderItem>();
+		HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 		
 		// Validate only the data on the correct tab
 		if (newCustomer) {
-			HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 			for (int i=0; i<NUM_PANELS; i++) {
-				Item item = (Item)((JComboBox)orderitems.get(i)).getSelectedItem();
-				int quantity = Integer.parseInt(quantities.get(i).getText());
+				Item item = (Item)(orderitems.get(i)).getSelectedItem();
+				int quantity = Integer.parseInt(quantities.get(i).getValue().toString());
 				if(itemQuantities.containsKey(item)) {
 					quantity += itemQuantities.get(item);
 				}
 				itemQuantities.put(item, quantity);		
 			}
-			Iterator<Item> iter = itemQuantities.keySet().iterator();
-			while(iter.hasNext()) {
-				Item curKey = iter.next();
-				int quantity = itemQuantities.get(curKey);
-				items.add(new OrderItem(curKey, quantity));
-				total += quantity * curKey.getSalePrice();
-			}
 		} else {
-			HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 			for (int i=0; i<NUM_PANELS; i++) {
-				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
-				int quantity = Integer.parseInt(quantities2.get(i).getText());
+				Item item = (Item)(orderitems2.get(i)).getSelectedItem();
+				int quantity = Integer.parseInt(quantities2.get(i).getValue().toString());
 				if(itemQuantities.containsKey(item)) {
 					quantity += itemQuantities.get(item);
 				}
 				itemQuantities.put(item, quantity);
-			}
-			Iterator<Item> iter = itemQuantities.keySet().iterator();
-			while(iter.hasNext()) {
-				Item curKey = iter.next();
-				int quantity = itemQuantities.get(curKey);
-				items.add(new OrderItem(curKey, quantity));
-				total += quantity * curKey.getSalePrice();
 			}
 			/*for (int i=0; i<NUM_PANELS; i++) {
 				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
@@ -718,6 +734,16 @@ public class ClientGUI
 				items.add(new OrderItem(item, quantity));
 				total += quantity * item.getSalePrice();
 			}*/
+		}
+		
+		Iterator<Item> iter = itemQuantities.keySet().iterator();
+		while(iter.hasNext()) {
+			Item curKey = iter.next();
+			int quantity = itemQuantities.get(curKey);
+			if(quantity > 0) {
+				items.add(new OrderItem(curKey, quantity));
+				total += quantity * curKey.getSalePrice();
+			}
 		}
 		
 		o = new Order(custID, total);

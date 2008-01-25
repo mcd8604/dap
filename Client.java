@@ -74,7 +74,8 @@ public class Client {
 		if(isCustomer) {
 			//ID is valid, save ID
 			//Continue processing order
-			if (gui.validateOrder(false)) {
+			//if (gui.validateOrder(false)) {
+			if (gui.validateQuantity(false)) {
 				Order order = gui.getOrder();
 				producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
 			}
@@ -88,7 +89,8 @@ public class Client {
 		gui.displayMessage("Customer created successfully.");
 		
 		//Continue processing order
-		if (gui.validateOrder(true)) {
+		//if (gui.validateOrder(true)) {
+		if (gui.validateQuantity(true)) {
 			Order order = gui.getOrder(customer.getCustomerID());
 			producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
 		}
