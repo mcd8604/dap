@@ -86,7 +86,7 @@ public class Client {
 	}
 
 	public void createCustomer_Result(Customer customer) {
-		gui.displayMessage("Customer created successfully.");
+		gui.displayMessage("Customer created successfully. \n\n\t Your Customer ID is: " + customer.getCustomerID());
 		
 		//Continue processing order
 		//if (gui.validateOrder(true)) {
@@ -103,7 +103,7 @@ public class Client {
 	public void createOrder_Result(Order order) {
 		// TODO Need to know if success or failure and report to user
 		if(order.getCompleted()) {
-			gui.displayMessage("Order created successfully.");
+			gui.displayMessage("Order created successfully. \n\n\t Your Order ID is: " + order.getOrderID() + "\n\t The total cost of your order is: $" + order.getTotal());
 		} else {
 			//display error
 			gui.displayMessage("There was an error in processing your order.");

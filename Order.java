@@ -68,5 +68,10 @@ public class Order  implements Serializable {
 	public Boolean getCompleted() {
 		return completed;
 	}
+
+	public void setOrderID(int p_orderID) {
+		// TODO Auto-generated method stub
+		this.orderID = p_orderID;
+	}
 }
 

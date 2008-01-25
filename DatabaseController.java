@@ -310,6 +310,7 @@ public class DatabaseController {
         			sqlInsertOrderItems = "INSERT INTO OrderItem VALUES ('" + orderID + "','" + itemID + "','" + quantity + "'); ";
             		insertOrderItemsStatement.execute(sqlInsertOrderItems);	
         		} 
+        		o.setOrderID(orderID);
         		o.setCompleted(true);
         	}
         } catch(SQLException e){
