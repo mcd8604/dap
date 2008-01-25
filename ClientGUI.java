@@ -708,32 +708,24 @@ public class ClientGUI
 		ArrayList<OrderItem> items = new ArrayList<OrderItem>();
 		HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 		
-		// Validate only the data on the correct tab
+		ArrayList<JComboBox> itemComboBoxes = null;
+		ArrayList<JSpinner> quantitySpinners = null;
+		
 		if (newCustomer) {
-			for (int i=0; i<NUM_PANELS; i++) {
-				Item item = (Item)(orderitems.get(i)).getSelectedItem();
-				int quantity = Integer.parseInt(quantities.get(i).getValue().toString());
-				if(itemQuantities.containsKey(item)) {
-					quantity += itemQuantities.get(item);
-				}
-				itemQuantities.put(item, quantity);		
-			}
+			itemComboBoxes = orderitems;
+			quantitySpinners = quantities;
 		} else {
-			for (int i=0; i<NUM_PANELS; i++) {
-				Item item = (Item)(orderitems2.get(i)).getSelectedItem();
-				int quantity = Integer.parseInt(quantities2.get(i).getValue().toString());
-				if(itemQuantities.containsKey(item)) {
-					quantity += itemQuantities.get(item);
-				}
-				itemQuantities.put(item, quantity);
+			itemComboBoxes = orderitems2;
+			quantitySpinners = quantities2;
+		}
+		
+		for (int i=0; i<NUM_PANELS; i++) {
+			Item item = (Item)(itemComboBoxes.get(i)).getSelectedItem();
+			int quantity = Integer.parseInt(quantitySpinners.get(i).getValue().toString());
+			if(itemQuantities.containsKey(item)) {
+				quantity += itemQuantities.get(item);
 			}
-			/*for (int i=0; i<NUM_PANELS; i++) {
-				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
-				int quantity = Integer.parseInt(quantities2.get(i).getText());
-				
-				items.add(new OrderItem(item, quantity));
-				total += quantity * item.getSalePrice();
-			}*/
+			itemQuantities.put(item, quantity);
 		}
 		
 		Iterator<Item> iter = itemQuantities.keySet().iterator();
@@ -745,6 +737,14 @@ public class ClientGUI
 				total += quantity * curKey.getSalePrice();
 			}
 		}
+
+		/*for (int i=0; i<NUM_PANELS; i++) {
+			Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
+			int quantity = Integer.parseInt(quantities2.get(i).getText());
+			
+			items.add(new OrderItem(item, quantity));
+			total += quantity * item.getSalePrice();
+		}*/
 		
 		o = new Order(custID, total);
 		o.setOrderItems(items);
