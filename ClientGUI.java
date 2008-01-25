@@ -492,11 +492,16 @@ public class ClientGUI
 	private void submit2Clicked(MouseEvent evt) {
 		// TODO Auto-generated method stub
 		//If existing, ask Server if customer exists
-		Customer c = new Customer(getCustomerID());
-		client.sendMessage(c, Actions.IS_CUSTOMER, client.cookieID);
+		Customer c = null;
+		try {
+			c = new Customer(getCustomerID());
+			client.sendMessage(c, Actions.IS_CUSTOMER, client.cookieID);
+		} catch( NumberFormatException nfe ) {
+			displayMessage("Please enter an Integer for Customer ID.");
+		}
 	}
 	
-	public int getCustomerID() {
+	public int getCustomerID() throws NumberFormatException {
 		return Integer.parseInt(existingInput.getText());
 	}
 
