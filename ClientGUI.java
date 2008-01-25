@@ -8,11 +8,13 @@ import java.awt.event.MouseEvent;
  * Created on January 18, 2008, 7:49 PM
  */
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
  
  
  /**
  *
- * @author  Mitalee Dixit
+ * @author  Mitalee Dixit and Team4
  */
  
 public class ClientGUI
@@ -70,10 +72,8 @@ public class ClientGUI
 	
 	private ArrayList<JTextField> quantities;
 	private ArrayList<JComboBox> orderitems;
-	private ArrayList<Item> items;
 	private ArrayList<JTextField> quantities2;
 	private ArrayList<JComboBox> orderitems2;
-	private ArrayList<Item> items2;
 	private JPanel orderLabelPanel;
 	private JPanel orderLabelPanel2;
 	private JLabel existingLabel;
@@ -516,8 +516,6 @@ public class ClientGUI
 	 */
 	public void populateItems(ArrayList<Item> items) {
 		// Populate both tabs
-		this.items = items;
-		items2 = items;
 		for (Item item : items) {
 			for (JComboBox combo : orderitems) {
 				combo.addItem(item);
@@ -675,25 +673,56 @@ public class ClientGUI
 		
 		// Validate only the data on the correct tab
 		if (newCustomer) {
+			HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 			for (int i=0; i<NUM_PANELS; i++) {
 				Item item = (Item)((JComboBox)orderitems.get(i)).getSelectedItem();
 				int quantity = Integer.parseInt(quantities.get(i).getText());
-				
-				items.add(new OrderItem(item, quantity));
-				total += quantity * item.getSalePrice();
+				if(itemQuantities.containsKey(item)) {
+					quantity += itemQuantities.get(item);
+				}
+				itemQuantities.put(item, quantity);		
+			}
+			Iterator<Item> iter = itemQuantities.keySet().iterator();
+			while(iter.hasNext()) {
+				Item curKey = iter.next();
+				int quantity = itemQuantities.get(curKey);
+				items.add(new OrderItem(curKey, quantity));
+				total += quantity * curKey.getSalePrice();
 			}
 		} else {
+			HashMap<Item, Integer> itemQuantities = new HashMap<Item, Integer>();
 			for (int i=0; i<NUM_PANELS; i++) {
+				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
+				int quantity = Integer.parseInt(quantities2.get(i).getText());
+				if(itemQuantities.containsKey(item)) {
+					quantity += itemQuantities.get(item);
+				}
+				itemQuantities.put(item, quantity);
+			}
+			Iterator<Item> iter = itemQuantities.keySet().iterator();
+			while(iter.hasNext()) {
+				Item curKey = iter.next();
+				int quantity = itemQuantities.get(curKey);
+				items.add(new OrderItem(curKey, quantity));
+				total += quantity * curKey.getSalePrice();
+			}
+			/*for (int i=0; i<NUM_PANELS; i++) {
 				Item item = (Item)((JComboBox)orderitems2.get(i)).getSelectedItem();
 				int quantity = Integer.parseInt(quantities2.get(i).getText());
 				
 				items.add(new OrderItem(item, quantity));
 				total += quantity * item.getSalePrice();
-			}
+			}*/
 		}
 		
 		o = new Order(custID, total);
 		o.setOrderItems(items);
+		
+		/*Iterator<OrderItem> iter = o.getOrderItems().iterator();
+		while(iter.hasNext()) {
+			OrderItem oi = iter.next();
+			System.out.println(oi.getItem() + ": " + oi.getQuantity());
+		}*/
 		
 		return o;
 	}
