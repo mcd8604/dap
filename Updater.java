@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 
-public class Server {
+public class Updater {
 	public static String CLIENT_DEST = "jms/Client";
 	public static String CLIENT_FACTORY = "jms/ClientConnection";
 	public static String UPDATER_DEST = "jms/Updater";

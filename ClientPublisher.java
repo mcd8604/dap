@@ -32,7 +32,7 @@ public class ClientPublisher {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(Server.CLIENT_FACTORY);
+           cf = (TopicConnectionFactory)jndiContext.lookup(Updater.CLIENT_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -40,7 +40,7 @@ public class ClientPublisher {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(Server.CLIENT_DEST);
+           dest = (Topic)jndiContext.lookup(Updater.CLIENT_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
