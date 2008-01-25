@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 /**
  * Client.java
  *
@@ -69,8 +70,10 @@ public class ClientGUI
 	
 	private ArrayList<JTextField> quantities;
 	private ArrayList<JComboBox> orderitems;
+	private ArrayList<Item> items;
 	private ArrayList<JTextField> quantities2;
 	private ArrayList<JComboBox> orderitems2;
+	private ArrayList<Item> items2;
 	private JPanel orderLabelPanel;
 	private JPanel orderLabelPanel2;
 	private JLabel existingLabel;
@@ -131,11 +134,18 @@ public class ClientGUI
 
 		//creates the buttons
 		submit = new JButton("Submit");
-		submit.addActionListener(client);
-		submit.setActionCommand("new customer submit");
+		submit.addMouseListener(new java.awt.event.MouseAdapter() {
+	        public void mouseClicked(java.awt.event.MouseEvent evt) {
+	        	submitClicked(evt);
+	        }
+	      });
+		
 		submit2 = new JButton("Submit");
-		submit2.addActionListener(client);
-		submit2.setActionCommand("existing customer submit");
+		submit2.addMouseListener(new java.awt.event.MouseAdapter() {
+	        public void mouseClicked(java.awt.event.MouseEvent evt) {
+	        	submit2Clicked(evt);
+	        }
+	      });
 
 		//creates all the labels
 		firstNameLabel = new JLabel();
@@ -469,6 +479,22 @@ public class ClientGUI
 		//Display the window
 		clientFrame.setVisible(true);
 	}
+
+	private void submitClicked(MouseEvent evt) {
+		// TODO Auto-generated method stub
+		if (validateCustomer()) {
+			//ask Server to create customer
+			Customer customer = getCustomer();
+			client.sendMessage(customer, Actions.CREATE_CUSTOMER, client.cookieID);
+		}
+	}
+
+	private void submit2Clicked(MouseEvent evt) {
+		// TODO Auto-generated method stub
+		//If existing, ask Server if customer exists
+		Customer c = new Customer(getCustomerID());
+		client.sendMessage(c, Actions.IS_CUSTOMER, client.cookieID);
+	}
 	
 	public int getCustomerID() {
 		return Integer.parseInt(existingInput.getText());
@@ -490,12 +516,14 @@ public class ClientGUI
 	 */
 	public void populateItems(ArrayList<Item> items) {
 		// Populate both tabs
+		this.items = items;
+		items2 = items;
 		for (Item item : items) {
 			for (JComboBox combo : orderitems) {
-				combo.addItem(item.getItemName());
+				combo.addItem(item);
 			}
 			for (JComboBox combo : orderitems2) {
-				combo.addItem(item.getItemName());
+				combo.addItem(item);
 			}
 		}
 	}

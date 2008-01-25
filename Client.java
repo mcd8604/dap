@@ -5,6 +5,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * 
  * @author Adam Strong and Mitalee Mixit
  */
-public class Client implements ActionListener {
+public class Client {
 
 	private ClientProducer producer;
 	private ClientSubscriber subscriber;
@@ -43,7 +44,7 @@ public class Client implements ActionListener {
 	 * Listens for ActionEvents.  Main purpose is
 	 * to send a query to the server.
 	 */
-	public void actionPerformed(ActionEvent e) {
+	/*public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("existing customer submit")) {
 			//If existing, ask Server if customer exists
 			int id = gui.getCustomerID();
@@ -62,6 +63,10 @@ public class Client implements ActionListener {
 //				producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
 //			}
 //		}
+	}*/
+	
+	public void sendMessage(Serializable object, int action, String cookieID) {
+		producer.sendMessage(object, action, cookieID);
 	}
 
 	public void isCustomer_Result(boolean isCustomer) {
@@ -99,6 +104,7 @@ public class Client implements ActionListener {
 			gui.displayMessage("Order created successfully.");
 		} else {
 			//display error
+			gui.displayMessage("There was an error in processing your order.");
 		}
 	}
 	

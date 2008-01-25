@@ -53,5 +53,9 @@ public class Item implements Serializable {
     public double getSupplierPrice() {
       return supplierPrice;
     }
+    
+    public String toString() {
+    	return this.itemName;
+    }
 
 }
