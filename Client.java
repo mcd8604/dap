@@ -3,8 +3,6 @@
  *
  */
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 public class Client {
 
 	private ClientPublisher producer;
-	private ClientSubscriber subscriber;
+	private ClientConsumer subscriber;
 	private ClientGUI gui;
 	public String cookieID;
 	
@@ -27,7 +25,7 @@ public class Client {
 		this.cookieID = CookieID.createCookieID();
 		
 		//listen to topic for server messages
-		subscriber = new ClientSubscriber();
+		subscriber = new ClientConsumer();
 		subscriber.getMessages(this);
 		
 		gui = new ClientGUI(this);

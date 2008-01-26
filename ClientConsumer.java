@@ -1,5 +1,5 @@
 /*
- * Subscriber.java
+ * ClientConsumer.java
  *
  */
 
@@ -7,18 +7,18 @@ import javax.naming.*;
 import javax.jms.*;
 
 /**
- * ClientSubscriber
+ * ClientConsumer
  * 
  * @author  Adam Strong
  */
-public class ClientSubscriber {;
+public class ClientConsumer {;
     
     private Context jndiContext; // JNDI context for looking up names
-    private TopicConnectionFactory cf;
-    private Topic dest;
+    private QueueConnectionFactory cf;
+    private Destination dest;
     
-    /** Creates a new instance of Consumer */
-    public ClientSubscriber() {
+    /** Creates a new instance of ClientConsumer */
+    public ClientConsumer() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -30,7 +30,7 @@ public class ClientSubscriber {;
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(Updater.UPDATER_FACTORY);
+           cf = (QueueConnectionFactory)jndiContext.lookup(Updater.UPDATER_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -38,7 +38,7 @@ public class ClientSubscriber {;
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(Updater.UPDATER_DEST);
+           dest = (Destination)jndiContext.lookup(Updater.UPDATER_DEST);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
@@ -48,25 +48,25 @@ public class ClientSubscriber {;
     
     /** get messages from the queue */
     public void getMessages(Client p_client) {
-    	boolean running = true;
+    	//boolean running = true;
     	
 		try {
 			// create the connection
-			TopicConnection conn = cf.createTopicConnection();
+			QueueConnection conn = cf.createQueueConnection();
 			
 			// create the session
-			TopicSession sess = conn.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+			QueueSession sess = conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
 			
 			// create a producer
-			TopicSubscriber sub = sess.createSubscriber(dest);
+			MessageConsumer cons = sess.createConsumer(dest);
 			
 			// Set up the listener
 			ClientObjectMessageListener cl = new ClientObjectMessageListener(p_client);
-			sub.setMessageListener(cl);
+			cons.setMessageListener(cl);
 			
 			// start receiving messages
 			conn.start();
-			System.out.println("CLIENT SUBSCRIBED TO TOPIC: " + Updater.UPDATER_DEST);
+			System.out.println("CLIENT SUBSCRIBED TO QUEUE: " + Updater.UPDATER_DEST);
 			
 			/*while(running) {
 				try {

@@ -1,5 +1,5 @@
 /*
- * ServerPublisher.java
+ * ServerProducer.java
  *
  * This class produce object messages that will be consumed by the ClientConsumer object
  *
@@ -18,18 +18,18 @@ import java.io.Serializable;
 import javax.naming.*;
 import javax.jms.*;
 
-public class ServerPublisher {
+public class ServerProducer {
     
     private Context jndiContext; // JNDI context for looking up names
-    private TopicConnectionFactory cf;
-    private Topic dest;
+    private QueueConnectionFactory cf;
+    private Destination dest;
     
-    private TopicConnection conn;
-    private TopicSession sess;
-    private TopicPublisher pub;
+    private QueueConnection conn;
+    private QueueSession sess;
+    private MessageProducer pro;
     
-    /** Creates a new instance of Producer */
-    public ServerPublisher() {
+    /** Creates a new instance of ServerProducer */
+    public ServerProducer() {
         // get a JNDI naming context
         try {
             jndiContext = new InitialContext();
@@ -41,7 +41,7 @@ public class ServerPublisher {
         
         // set up a ConnectionFactory and destination
         try {
-           cf = (TopicConnectionFactory)jndiContext.lookup(Updater.UPDATER_FACTORY);
+           cf = (QueueConnectionFactory)jndiContext.lookup(Updater.UPDATER_FACTORY);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a ConnectionFactory. Msg: " + exc.getMessage());
@@ -52,19 +52,19 @@ public class ServerPublisher {
            dest = (Topic)jndiContext.lookup(Updater.UPDATER_DEST);
            
            // create the connection
-           conn = cf.createTopicConnection();
+           conn = cf.createQueueConnection();
        
            // create the session
-           sess = conn.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
+           sess = conn.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
        
            // create a producer
-           pub = sess.createPublisher(dest);
+           pro = sess.createProducer(dest);
         }
         catch(Exception exc) {
             System.out.println("Unable to get a Destination. Msg: " + exc.getMessage());
             System.exit(1);
         }
-        System.out.println("SERVER PUBLISHER STARTED");
+        System.out.println("SERVER PRODUCER STARTED");
     }
     
     /** create the connection, session, and send messages 
@@ -81,9 +81,8 @@ public class ServerPublisher {
             om.setStringProperty(CookieID.COOKIE_ID, cookieID);
             
             // publish the message
-            pub.publish(om);
-            System.out.println("SERVER PRODUCER PUBLISHED MESSAGE");
-            //System.out.println(om.toString());
+            pro.send(om);
+            System.out.println("SERVER PRODUCER SENT MESSAGE");
         }
         catch(JMSException je) {
             System.out.println("Unable to close the connection: " + je.getMessage());
@@ -109,7 +108,7 @@ public class ServerPublisher {
     public static void main(String [] args){
         
         // create the Producer
-        //ServerPublisher prd = new ServerPublisher();
+        //ServerProducer prd = new ServerProducer();
         
         // send the messages
         //prd.sendMessage();

@@ -23,7 +23,7 @@ public class ServerSubscriber {
     private TopicSession sess;
     private MessageConsumer cons;
     
-    private ServerPublisher spub;
+    private ServerProducer spub;
     
     /** Creates a new instance of ServerConsumer
      * @param p_sPub */
@@ -55,7 +55,7 @@ public class ServerSubscriber {
         }
     }
     
-    public void start(ServerPublisher spub) {
+    public void start(ServerProducer spub) {
         // create the connection
         try {
 			conn = cf.createTopicConnection();

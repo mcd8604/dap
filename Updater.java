@@ -13,7 +13,7 @@ public class Updater {
     public static void main(String [] args){  
         
         // create a publisher (topic sender)
-        ServerPublisher spub = new ServerPublisher();    
+        ServerProducer spub = new ServerProducer();    
         
         // create the ServerSubscriber (topic receiver)
         ServerSubscriber scon = new ServerSubscriber();

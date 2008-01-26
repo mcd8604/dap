@@ -8,16 +8,16 @@ import javax.jms.ObjectMessage;
 
 public class ServerObjectMessageListener implements MessageListener {
 	
-	private ServerPublisher spub;
+	private ServerProducer spub;
 	
-	public ServerObjectMessageListener(ServerPublisher p_spub) {
+	public ServerObjectMessageListener(ServerProducer p_spub) {
         // create the ServerPublisher
         spub = p_spub;
 	}
 
 	public void onMessage(Message m) {
 		if(m != null) {
-			System.out.println("MESSAGE RECEIVED: " + m.toString());
+			System.out.print("MESSAGE RECEIVED, ACTION: ");
 
 			ObjectMessage om = (ObjectMessage)m;
 			
@@ -38,15 +38,19 @@ public class ServerObjectMessageListener implements MessageListener {
 	        	// 2 - process message using DatabaseController
 	        	switch(action) {
 	        		case Actions.IS_CUSTOMER:
+	        			System.out.println("IS_CUSTOMER");
 	                    result = DatabaseController.isCustomer((Customer)om.getObject());
 	        			break;
 	        		case Actions.CREATE_CUSTOMER:
+	        			System.out.println("CREATE_CUSTOMER");
 	        			result = DatabaseController.createCustomer((Customer)om.getObject());
 	        			break;
 	        		case Actions.GET_ITEMS:
+	        			System.out.println("GET_ITEMS");
 	        			result = DatabaseController.getItems();
 	        			break;
 	        		case Actions.CREATE_ORDER:
+	        			System.out.println("CREATE_ORDER");
 	        			result = DatabaseController.createOrder((Order)om.getObject());
 	        			break;
 	        	}

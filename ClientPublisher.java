@@ -9,7 +9,7 @@ import javax.naming.*;
 import javax.jms.*;
 
 /**
- * ClientProducer
+ * ClientPublisher
  * 
  * @author  Adam Strong
  */
@@ -19,7 +19,7 @@ public class ClientPublisher {
     private TopicConnectionFactory cf;
     private Topic dest;
     
-    /** Creates a new instance of Producer */
+    /** Creates a new instance of ClientPublisher */
     public ClientPublisher() {
         // get a JNDI naming context
         try {
@@ -60,7 +60,7 @@ public class ClientPublisher {
             TopicSession sess = conn.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
         
             // create a producer
-            MessageProducer prod = sess.createPublisher(dest);
+            TopicPublisher pub = sess.createPublisher(dest);
         
             // create an object message
             ObjectMessage message = sess.createObjectMessage(object);
@@ -70,9 +70,8 @@ public class ClientPublisher {
             
             // set the cookieID for the message
             message.setStringProperty(CookieID.COOKIE_ID, cookieID);
-            System.out.println(cookieID);
             
-            prod.send(message);
+            pub.publish(message);
 			System.out.println("CLIENT SENT MESSAGE");
         
             // send an empty message to indicate nothing more is coming
