@@ -343,24 +343,45 @@ public class DatabaseController {
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement(); 
 	            // TODO add left join supplier
-        		sqlQuery = "SELECT * FROM Item ";
+        		sqlQuery = "SELECT * FROM Supplier ";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
-	            
+
+	            ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
 				while(rs.next()) {
-					// Parse Strings into items			        
-		        	int id = rs.getInt("ItemID");
-		        	String name = rs.getString("ItemName");
-		        	String desc = rs.getString("ItemDesc");
-		        	double salePrice = rs.getDouble("SalePrice");
-		        	double supplierPrice = rs.getDouble("SupplierPrice");
-		        	
+					// Parse Strings into suppliers			        
+		        	int id = rs.getInt("SupplierID");
+		        	String name = rs.getString("SupplierName");
+		        	String address = rs.getString("SupplierAddr");
+		        	String city = rs.getString("SupplierCity");
+		        	String state= rs.getString("SupplierState");
+		        	String zipcode = rs.getString("SupplierZipcode");
+		        	String phone = rs.getString("SupplierPhone");
+		        	String email = rs.getString("SupplierEmail");
 		        	//TODO parse supplier
-		        	Supplier supplier = new Supplier();
-		        	
-					Item item = new Item(id, name, desc, salePrice, supplierPrice, supplier);
-					ret.add(item);
+		        	suppliers.add(new Supplier(id, name, address, city, state, zipcode, phone, email));
 				}
+				for(int i = 0; i < suppliers.size(); i++) {
+					Supplier s = suppliers.get(i);
+					
+		            statement = getInstance().conn.createStatement(); 
+	        		sqlQuery = "SELECT * FROM Item WHERE ItemID=" + s.getID();
+		            statement.execute(sqlQuery);
+		            rs = statement.getResultSet();
+		            
+					while(rs.next()) {
+					
+						// Parse Strings into items			        
+			        	int id = rs.getInt("ItemID");
+			        	String name = rs.getString("ItemName");
+			        	String desc = rs.getString("ItemDesc");
+			        	double salePrice = rs.getDouble("SalePrice");
+			        	double supplierPrice = rs.getDouble("SupplierPrice");
+			        	
+			        	Item item = new Item(id, name, desc, salePrice, supplierPrice);
+			        	s.addItem(item);
+					}
+        		}
         	}        	
         } catch(SQLException e){
 			e.printStackTrace();
