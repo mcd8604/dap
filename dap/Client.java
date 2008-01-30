@@ -84,12 +84,12 @@ public class Client {
 	}
 
 	public void createCustomer_Result(Customer customer) {
-		gui.displayMessage("Customer created successfully. \n\n\t Your Customer ID is: " + customer.getCustomerID());
+		gui.displayMessage("Customer created successfully. \n\n\t Your Customer ID is: " + customer.getID());
 		
 		//Continue processing order
 		//if (gui.validateOrder(true)) {
 		if (gui.validateQuantity(true)) {
-			Order order = gui.getOrder(customer.getCustomerID());
+			Order order = gui.getOrder(customer.getID());
 			producer.sendMessage(order, Actions.CREATE_ORDER, this.cookieID);
 		}
 	}

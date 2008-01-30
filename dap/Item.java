@@ -24,6 +24,7 @@ public class Item implements Serializable {
     private String itemDesc;
     private double salePrice;
     private double supplierPrice;
+    private Supplier supplier;
 
     /** Creates a new instance of Item */
     public Item (int p_itemID, String p_itemName, String p_itemDesc, double p_salePrice, double p_supplierPrice) {
@@ -33,6 +34,15 @@ public class Item implements Serializable {
       salePrice = p_salePrice;
       supplierPrice = p_supplierPrice;
     }
+    
+    public Item (int p_itemID, String p_itemName, String p_itemDesc, double p_salePrice, double p_supplierPrice, Supplier p_supplier) {
+        itemID = p_itemID;
+        itemName = p_itemName;
+        itemDesc = p_itemDesc;
+        salePrice = p_salePrice;
+        supplierPrice = p_supplierPrice;
+        supplier = p_supplier;
+      }
     
     public int getItemID() {
       return itemID;
@@ -56,6 +66,14 @@ public class Item implements Serializable {
     
     public String toString() {
     	return this.itemName;
+    }
+    
+    public void setSupplier(Supplier s) {
+    	this.supplier = s;
+    }
+    
+    public Supplier getSupplier() {
+    	return this.supplier;
     }
 
 }

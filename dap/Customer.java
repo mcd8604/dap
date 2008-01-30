@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
 /*
  * Customer.java
@@ -19,7 +20,8 @@ public class Customer implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int customerID;
+	private int id;
+	private Date created;
     private String lastName;
     private String firstName;
     private String address;
@@ -33,7 +35,7 @@ public class Customer implements Serializable {
 
     /** Creates a new instance of Customer */
     public Customer(int p_customerID) {
-	customerID = p_customerID;
+	id = p_customerID;
 
       orders = new ArrayList<Order>();
     }
@@ -52,12 +54,26 @@ public class Customer implements Serializable {
       orders = new ArrayList<Order>();
     }
     
-    public int getCustomerID() {
-      return customerID;
+    public Customer(String p_lastName, String p_firstName, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email, Date p_created) {
+        lastName = p_lastName;
+        firstName = p_firstName;
+        address = p_address;
+        city = p_city;
+        state = p_state;
+        zipcode = p_zipcode;
+        phone = p_phone;
+        email = p_email;
+        created = p_created;
+        
+        orders = new ArrayList<Order>();
+      }
+    
+    public int getID() {
+      return id;
     }
 
-	public void setCustomerID(int i) {
-	  customerID = i;
+	public void setID(int i) {
+	  id = i;
 	}
 
     public String getLastName() {
@@ -98,6 +114,10 @@ public class Customer implements Serializable {
     
     public void setOrders(ArrayList<Order> p_orders) {
       orders = p_orders;
+    }
+    
+    public Date getCreated() {
+    	return created;
     }
 
 }

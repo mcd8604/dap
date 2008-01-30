@@ -162,7 +162,7 @@ public class DatabaseController {
         	synchronized(stmtLock) {
         		// *** do we need PreparedStatement?
 	            statement = getInstance().conn.createStatement(); 
-	            sqlQuery = "SELECT * FROM Customer WHERE ID='" + c.getCustomerID() + "';";
+	            sqlQuery = "SELECT * FROM Customer WHERE ID='" + c.getID() + "';";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
@@ -216,7 +216,7 @@ public class DatabaseController {
 	            // 2 - Return Customer with ID
 	            rs = insertStatement.getGeneratedKeys();
 	            rs.next();
-	        	c.setCustomerID(rs.getInt(1));
+	        	c.setID(rs.getInt(1));
             	ret = c;
         	}
         } catch(SQLException e){
@@ -322,6 +322,55 @@ public class DatabaseController {
         return o;
     }
 
+	public static ArrayList<Order> getOrdersToday() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static ArrayList<Customer> getCustomersToday() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static ArrayList<Item> getItemsWithSuppliers() {
+    	ArrayList<Item> ret = new ArrayList<Item>();
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+	            statement = getInstance().conn.createStatement(); 
+	            // TODO add left join supplier
+        		sqlQuery = "SELECT * FROM Item ";
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				while(rs.next()) {
+					// Parse Strings into items			        
+		        	int id = rs.getInt("ItemID");
+		        	String name = rs.getString("ItemName");
+		        	String desc = rs.getString("ItemDesc");
+		        	double salePrice = rs.getDouble("SalePrice");
+		        	double supplierPrice = rs.getDouble("SupplierPrice");
+		        	
+		        	//TODO parse supplier
+		        	Supplier supplier = new Supplier();
+		        	
+					Item item = new Item(id, name, desc, salePrice, supplierPrice, supplier);
+					ret.add(item);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+		return ret;
+	}
+
     /**
      * TEST CASE
      */
@@ -343,7 +392,7 @@ public class DatabaseController {
         	//System.out.println(c2.getCustomerID());
         	
         	//TEST createOrder
-        	Order order = new Order(c2.getCustomerID(), 100);
+        	Order order = new Order(c2.getID(), 100);
         	ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
         	for(int i = 0; i < items.size(); i++) {
         		orderItems.add(new OrderItem(items.get(i), i + 1));

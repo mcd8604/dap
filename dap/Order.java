@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
 /*
  * Order.java
@@ -21,7 +22,10 @@ public class Order  implements Serializable {
 
     private int orderID;
     private int customerID;
+    private Customer customer;
     private float total;
+	private Date created;
+	
     private ArrayList<OrderItem> orderItems;
 
 	private boolean completed;
@@ -38,6 +42,15 @@ public class Order  implements Serializable {
       customerID = p_customerID;
       total = p_total;
       orderItems = new ArrayList<OrderItem>();
+    }
+    
+    public Order(int p_orderID, Customer p_customer, float p_total, Date p_created) {
+    	orderID = p_orderID;
+    	customerID = p_customer.getID();
+    	customer = p_customer;
+    	total = p_total;
+    	created = p_created;
+    	orderItems = new ArrayList<OrderItem>();
     }
     
     public int getOrderID() {
@@ -73,5 +86,17 @@ public class Order  implements Serializable {
 		// TODO Auto-generated method stub
 		this.orderID = p_orderID;
 	}
+	
+	public void setCustomer(Customer c) {
+		this.customer = c;
+	}
+	
+	public Customer getCustomer() {
+		return this.customer;
+	}
+    
+    public Date getCreated() {
+    	return created;
+    }
 }
 
