@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 		
 		ArrayList<Order> orders = DatabaseController.getOrdersToday();
 		ArrayList<Customer> customers = DatabaseController.getCustomersToday();
-		ArrayList<Item> items = DatabaseController.getItemsWithSuppliers();
+		ArrayList<Supplier> suppliers = DatabaseController.getSuppliers();
 	}  	
 	
 	/* (non-Java-doc)
