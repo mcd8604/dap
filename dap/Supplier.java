@@ -18,6 +18,9 @@ public class Supplier implements Serializable {
 	private String email;
 
 	private ArrayList<Item> items;
+    
+    public Supplier() {
+	}
 	
 	public Supplier(int p_id, String p_name, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email) {
 	    id = p_id;
@@ -30,8 +33,8 @@ public class Supplier implements Serializable {
 	      email = p_email;
 	      items = new ArrayList<Item>();
     }
-    
-    public int getID() {
+
+	public int getID() {
       return id;
     }
 
@@ -69,6 +72,10 @@ public class Supplier implements Serializable {
 
 	public void addItem(Item item) {
 		this.items.add(item);
+	}
+	
+	public ArrayList<Item> getItems() {
+		return this.items;
 	}
 
 }

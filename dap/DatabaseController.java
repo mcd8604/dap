@@ -334,6 +334,7 @@ public class DatabaseController {
 	            statement = getInstance().conn.createStatement(); 
         		
 	            //TODO update query for today's date also join customer
+	            // sqlQuery = "SELECT * FROM Order WHERE (TO_DAYS(CURDATE()) - TO_DAYS(DATE))=0";
 	            sqlQuery = "SELECT * FROM Ordr";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
@@ -413,14 +414,13 @@ public class DatabaseController {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement(); 
-	            // TODO add left join supplier
-        		sqlQuery = "SELECT * FROM Supplier ";
+        		sqlQuery = "SELECT * FROM Supplier LEFT JOIN Item ON (Supplier.SupplierID = Item.SupplierID)";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 
-	            ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
+	            Supplier currentSupplier = new Supplier();
 				while(rs.next()) {
-					// Parse Strings into suppliers			        
+					// Parse result into suppliers			        
 		        	int id = rs.getInt("SupplierID");
 		        	String name = rs.getString("SupplierName");
 		        	String address = rs.getString("SupplierAddr");
@@ -429,30 +429,21 @@ public class DatabaseController {
 		        	String zipcode = rs.getString("SupplierZipcode");
 		        	String phone = rs.getString("SupplierPhone");
 		        	String email = rs.getString("SupplierEmail");
-		        	//TODO parse supplier
-		        	suppliers.add(new Supplier(id, name, address, city, state, zipcode, phone, email));
-				}
-				for(int i = 0; i < suppliers.size(); i++) {
-					Supplier s = suppliers.get(i);
-					
-		            statement = getInstance().conn.createStatement(); 
-	        		sqlQuery = "SELECT * FROM Item WHERE ItemID=" + s.getID();
-		            statement.execute(sqlQuery);
-		            rs = statement.getResultSet();
-		            
-					while(rs.next()) {
-					
-						// Parse Strings into items			        
-			        	int id = rs.getInt("ItemID");
-			        	String name = rs.getString("ItemName");
-			        	String desc = rs.getString("ItemDesc");
-			        	double salePrice = rs.getDouble("SalePrice");
-			        	double supplierPrice = rs.getDouble("SupplierPrice");
-			        	
-			        	Item item = new Item(id, name, desc, salePrice, supplierPrice);
-			        	s.addItem(item);
+		        	
+		        	int itemID = rs.getInt("ItemID");
+		        	String itemName = rs.getString("ItemName");
+		        	String itemDesc = rs.getString("ItemDesc");
+		        	double salePrice = rs.getDouble("SalePrice");
+		        	double supplierPrice = rs.getDouble("SupplierPrice");
+		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);
+		        	
+					if(currentSupplier.getID() == id) {
+					} else {
+						currentSupplier = new Supplier(id, name, address, city, state, zipcode, phone, email); 
+						ret.add(currentSupplier);
 					}
-        		}
+					currentSupplier.addItem(item);					
+				}
         	}        	
         } catch(SQLException e){
 			e.printStackTrace();
@@ -467,14 +458,14 @@ public class DatabaseController {
      * TEST CASE
      */
     public static void main(String [] args) {
-        String sqlQuery = "SELECT * FROM customer;";
+        //String sqlQuery = "SELECT * FROM customer;";
         try {
         	//TEST isCustomer
         	//System.out.println(isCustomer(new Customer(1)));
         	
         	//TEST getItems
-        	ArrayList<Item> items = getItems();
-        	/*for(Item i : items) {
+        	/*ArrayList<Item> items = getItems();
+        	for(Item i : items) {
         		System.out.println(i.getItemID());
         	}*/
         	
@@ -493,8 +484,16 @@ public class DatabaseController {
         	//createOrder(order);
         	
         	//TEST getSuppliers
-        	ArrayList<Supplier> suppliers = getSuppliers();
-        	
+        	/*ArrayList<Supplier> suppliers = getSuppliers();
+        	Iterator<Supplier> iter = suppliers.iterator();
+        	while(iter.hasNext()) {
+        		Supplier s = iter.next();
+        		System.out.println(s.getName());
+        		ArrayList<Item> items = s.getItems();
+        		for(int i = 0; i < items.size(); i++) {
+            		System.out.println("\t" + items.get(i));
+        		}
+        	}*/
         } catch(Exception ex) {
             ex.printStackTrace();
         }	
