@@ -2,6 +2,7 @@
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 
 /**
@@ -334,21 +335,34 @@ public class DatabaseController {
 	            statement = getInstance().conn.createStatement(); 
         		
 	            //TODO update query for today's date also join customer
-	            // sqlQuery = "SELECT * FROM Order WHERE (TO_DAYS(CURDATE()) - TO_DAYS(DATE))=0";
-	            sqlQuery = "SELECT * FROM Ordr";
+	            //sqlQuery = "SELECT * FROM Ordr LEFT JOIN Customer ON(Ordr.ID = Customer.ID) WHERE DATEDIFF(NOW(),OrderDate) = 0";
+	            sqlQuery = "SELECT * FROM Ordr LEFT JOIN Customer ON(Ordr.ID = Customer.ID)";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
-				while(rs.next()) {
-					// Parse Strings into items			        
-		        	int orderID = rs.getInt("OrderID");	        
-		        	int customerID = rs.getInt("ID");
+				while(rs.next()) {        
+		        	int orderID = rs.getInt("OrderID");	 
 		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
 		        	double total = rs.getDouble("Total");
+		            
+		        	int customerID = rs.getInt("ID");
+					String firstName = rs.getString("FirstName");
+					String lastName = rs.getString("LastName");
+					String address = rs.getString("Address");
+					String city = rs.getString("City");
+					String state = rs.getString("State");
+					String zipcode = rs.getString("Zipcode");
+					String phone = rs.getString("Phone");
+					String email = rs.getString("Email");
+					//TODO Parse Date
+		        	Date orderDate = null;//rs.getDate("OrderDate");
+		        	//Time timeCreated = rs.getTime("Date");
+		        	//dateCreated.setTime(timeCreated.getTime());
+					
+					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, null);
 		        	
-					Order order = new Order(orderID, customerID, (float)total);
-					//TODO parse customer, add to order
-					//order.setCustomer(new Customer());
+					Order order = new Order(orderID, customer, (float)total, orderDate);
+					
 					ret.add(order);
 				}
         	}        	
@@ -373,6 +387,7 @@ public class DatabaseController {
 	            statement = getInstance().conn.createStatement(); 
         		
 	            //TODO update query for today's date
+	            //sqlQuery = "SELECT * FROM Customer WHERE DATEDIFF(NOW(),CustomerDate) = 0";
 	            sqlQuery = "SELECT * FROM Customer";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
@@ -388,10 +403,10 @@ public class DatabaseController {
 					String zipcode = rs.getString("Zipcode");
 					String phone = rs.getString("Phone");
 					String email = rs.getString("Email");
-					
 					//TODO parse date created
+					Date customerDate = null;//rs.getDate("CustomerDate");
 		        	
-					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, null);
+					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
 					ret.add(customer);
 				}
         	}        	
@@ -494,6 +509,17 @@ public class DatabaseController {
             		System.out.println("\t" + items.get(i));
         		}
         	}*/
+        	
+        	//TEST getOrdersToday
+        	ArrayList<Order> orders = getOrdersToday();
+        	Iterator<Order> iter = orders.iterator();
+        	while(iter.hasNext()) {
+        		Order o = iter.next();
+        		System.out.println(o.getOrderID());
+        		System.out.println(o.getCreated());
+        		Customer c = o.getCustomer();
+        		System.out.println(c.getLastName());
+        	}
         } catch(Exception ex) {
             ex.printStackTrace();
         }	
