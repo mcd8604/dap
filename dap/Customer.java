@@ -54,8 +54,9 @@ public class Customer implements Serializable {
       orders = new ArrayList<Order>();
     }
     
-    public Customer(String p_lastName, String p_firstName, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email, Date p_created) {
-        lastName = p_lastName;
+    public Customer(int p_id, String p_lastName, String p_firstName, String p_address, String p_city, String p_state, String p_zipcode, String p_phone, String p_email, Date p_created) {
+    	id = p_id;
+    	lastName = p_lastName;
         firstName = p_firstName;
         address = p_address;
         city = p_city;
@@ -66,7 +67,7 @@ public class Customer implements Serializable {
         created = p_created;
         
         orders = new ArrayList<Order>();
-      }
+    }
     
     public int getID() {
       return id;

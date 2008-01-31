@@ -323,17 +323,88 @@ public class DatabaseController {
     }
 
 	public static ArrayList<Order> getOrdersToday() {
-		// TODO Auto-generated method stub
-		return null;
+    	ArrayList<Order> ret = new ArrayList<Order>();
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+	            statement = getInstance().conn.createStatement(); 
+        		
+	            //TODO update query for today's date also join customer
+	            sqlQuery = "SELECT * FROM Ordr";
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				while(rs.next()) {
+					// Parse Strings into items			        
+		        	int orderID = rs.getInt("OrderID");	        
+		        	int customerID = rs.getInt("ID");
+		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
+		        	double total = rs.getDouble("Total");
+		        	
+					Order order = new Order(orderID, customerID, (float)total);
+					//TODO parse customer, add to order
+					//order.setCustomer(new Customer());
+					ret.add(order);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+		return ret;
 	}
 
 	public static ArrayList<Customer> getCustomersToday() {
-		// TODO Auto-generated method stub
-		return null;
+    	ArrayList<Customer> ret = new ArrayList<Customer>();
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+	            statement = getInstance().conn.createStatement(); 
+        		
+	            //TODO update query for today's date
+	            sqlQuery = "SELECT * FROM Customer";
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				while(rs.next()) {
+					// Parse Strings into items		
+		        	int customerID = rs.getInt("CustomerID");
+					String firstName = rs.getString("FirstName");
+					String lastName = rs.getString("LastName");
+					String address = rs.getString("Address");
+					String city = rs.getString("City");
+					String state = rs.getString("State");
+					String zipcode = rs.getString("Zipcode");
+					String phone = rs.getString("Phone");
+					String email = rs.getString("Email");
+					
+					//TODO parse date created
+		        	
+					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, null);
+					ret.add(customer);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+		return ret;
 	}
 
-	public static ArrayList<Item> getItemsWithSuppliers() {
-    	ArrayList<Item> ret = new ArrayList<Item>();
+	public static ArrayList<Supplier> getSuppliers() {
+    	ArrayList<Supplier> ret = new ArrayList<Supplier>();
     	ResultSet rs = null;
     	Statement statement = null;
     	String sqlQuery = null;
@@ -408,18 +479,22 @@ public class DatabaseController {
         	}*/
         	
         	//TEST createCustomer
-        	Customer c = new Customer("first", "last", "123 fake street", "cityville", "state", "12342", "(432) - 523 - 4567", "email@gmail.com");
-        	Customer c2 = createCustomer(c);
+        	//Customer c = new Customer("first", "last", "123 fake street", "cityville", "state", "12342", "(432) - 523 - 4567", "email@gmail.com");
+        	//Customer c2 = createCustomer(c);
         	//System.out.println(c2.getCustomerID());
         	
         	//TEST createOrder
-        	Order order = new Order(c2.getID(), 100);
-        	ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
-        	for(int i = 0; i < items.size(); i++) {
-        		orderItems.add(new OrderItem(items.get(i), i + 1));
-        	}
-        	order.setOrderItems(orderItems);
-        	createOrder(order);
+        	//Order order = new Order(c2.getID(), 100);
+        	//ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
+        	//for(int i = 0; i < items.size(); i++) {
+        	//	orderItems.add(new OrderItem(items.get(i), i + 1));
+        	//}
+        	//order.setOrderItems(orderItems);
+        	//createOrder(order);
+        	
+        	//TEST getSuppliers
+        	ArrayList<Supplier> suppliers = getSuppliers();
+        	
         } catch(Exception ex) {
             ex.printStackTrace();
         }	
