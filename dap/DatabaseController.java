@@ -2,7 +2,6 @@
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 
 /**
@@ -193,8 +192,6 @@ public class DatabaseController {
     	// *** Do we need PreparedStatement?
     	Statement insertStatement = null;
     	String sqlInsert = null;
-    	Statement queryStatement = null;
-    	String sqlQuery = null;
 
         try {
         	getInstance().getConnection();
@@ -323,6 +320,13 @@ public class DatabaseController {
         return o;
     }
 
+    /**
+     * Gets all orders processed this day. Each order
+     * contains a Customer Object and list of OrderItem
+     * objects.
+     * 
+     * @return a list of Orders
+     */
 	public static ArrayList<Order> getOrdersToday() {
     	ArrayList<Order> ret = new ArrayList<Order>();
     	ResultSet rs = null;
@@ -334,18 +338,21 @@ public class DatabaseController {
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement(); 
         		
-	            //TODO update query for today's date also join customer
-	            //sqlQuery = "SELECT * FROM Ordr LEFT JOIN Customer ON(Ordr.ID = Customer.ID) WHERE DATEDIFF(NOW(),OrderDate) = 0";
-	            sqlQuery = "SELECT * FROM Ordr LEFT JOIN Customer ON(Ordr.ID = Customer.ID)";
+	            sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
+	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
+	            		"Customer ON(Ordr.ID = Customer.ID) WHERE DATEDIFF(NOW(),Ordr.CrDate) = 0 GROUP BY OrderItem.OrderID ";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
+	            
+	            Order currentOrder = new Order();
 	            
 				while(rs.next()) {        
 		        	int orderID = rs.getInt("OrderID");	 
 		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
-		        	double total = rs.getDouble("Total");
+		        	double total = rs.getDouble("CalcTotal");
+		        	Date orderDate = rs.getDate("Ordr.CrDate");
 		            
-		        	int customerID = rs.getInt("ID");
+		        	int customerID = rs.getInt("Customer.ID");
 					String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String address = rs.getString("Address");
@@ -354,16 +361,25 @@ public class DatabaseController {
 					String zipcode = rs.getString("Zipcode");
 					String phone = rs.getString("Phone");
 					String email = rs.getString("Email");
-					//TODO Parse Date
-		        	Date orderDate = null;//rs.getDate("OrderDate");
-		        	//Time timeCreated = rs.getTime("Date");
-		        	//dateCreated.setTime(timeCreated.getTime());
+		        	Date customerDate = rs.getDate("Customer.CrDate");
+
+		        	int itemID = rs.getInt("ItemID");
+		        	String itemName = rs.getString("ItemName");
+		        	String itemDesc = rs.getString("ItemDesc");
+		        	double salePrice = rs.getDouble("SalePrice");
+		        	double supplierPrice = rs.getDouble("SupplierPrice");
+		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);
+
+		        	int quantity = rs.getInt("Quantity");
+
+					if(orderID != currentOrder.getOrderID()) {
+						Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
+						currentOrder = new Order(orderID, customer, total, orderDate);
+					} 
+
+					currentOrder.addOrderItem(new OrderItem(orderID, item, quantity));
 					
-					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, null);
-		        	
-					Order order = new Order(orderID, customer, (float)total, orderDate);
-					
-					ret.add(order);
+					ret.add(currentOrder);
 				}
         	}        	
         } catch(SQLException e){
@@ -386,15 +402,13 @@ public class DatabaseController {
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement(); 
         		
-	            //TODO update query for today's date
-	            //sqlQuery = "SELECT * FROM Customer WHERE DATEDIFF(NOW(),CustomerDate) = 0";
-	            sqlQuery = "SELECT * FROM Customer";
+	            sqlQuery = "SELECT * FROM Customer WHERE DATEDIFF(NOW(), CrDate) = 0";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
 				while(rs.next()) {
 					// Parse Strings into items		
-		        	int customerID = rs.getInt("CustomerID");
+		        	int customerID = rs.getInt("Customer.ID");
 					String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String address = rs.getString("Address");
@@ -403,8 +417,7 @@ public class DatabaseController {
 					String zipcode = rs.getString("Zipcode");
 					String phone = rs.getString("Phone");
 					String email = rs.getString("Email");
-					//TODO parse date created
-					Date customerDate = null;//rs.getDate("CustomerDate");
+					Date customerDate = rs.getDate("CrDate");
 		        	
 					Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
 					ret.add(customer);
@@ -511,15 +524,28 @@ public class DatabaseController {
         	}*/
         	
         	//TEST getOrdersToday
-        	ArrayList<Order> orders = getOrdersToday();
+        	/*ArrayList<Order> orders = getOrdersToday();
         	Iterator<Order> iter = orders.iterator();
         	while(iter.hasNext()) {
         		Order o = iter.next();
-        		System.out.println(o.getOrderID());
-        		System.out.println(o.getCreated());
-        		Customer c = o.getCustomer();
-        		System.out.println(c.getLastName());
+        		System.out.println("ORDER ID: " + o.getOrderID());
+        		System.out.println("\tCREATED: " + o.getCreated() + " :: ORDERED BY: " + o.getCustomer().getLastName() + " :: TOTAL: " + o.getTotal());
+        		ArrayList<OrderItem> orderItems = o.getOrderItems();
+        		for(int i = 0; i < orderItems.size(); i++) {
+        			OrderItem orderItem = orderItems.get(i);
+            		System.out.println("\t\t" + orderItem.getQuantity() + " - "+ orderItem.getItem().getItemName());
+        		}
+        	}*/
+        	
+        	//TEST getCustomersToday
+        	ArrayList<Customer> customers = getCustomersToday();
+        	Iterator<Customer> iter = customers.iterator();
+        	while(iter.hasNext()) {
+        		Customer c = iter.next();
+        		System.out.println(c.getLastName() + ", " + c.getFirstName() + " :: CREATED: " + c.getCreated());
+        		
         	}
+        	
         } catch(Exception ex) {
             ex.printStackTrace();
         }	

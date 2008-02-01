@@ -3,6 +3,8 @@ import java.io.Serializable;
 
 
 /**
+ * Contains an Item object and the quantity
+ * associated with the Item.
  *
  * @author mcd
  */
@@ -13,13 +15,13 @@ public class OrderItem  implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-    private int orderItemID;
+    private int orderID;
     private Item item;
     private int quantity;
 
     /** Creates a new instance of OrderItem */
-    public OrderItem(int p_OrderItemID) {
-	orderItemID= p_OrderItemID;
+    public OrderItem(int p_orderID) {
+    	orderID = p_orderID;
     }
 
     /** Creates a new instance of Customer */
@@ -29,14 +31,14 @@ public class OrderItem  implements Serializable {
     }
 
     /** Creates a new instance of Customer */
-    public OrderItem(int p_OrderItemID, Item p_item, int p_quantity) {
-	orderItemID = p_OrderItemID;
+    public OrderItem(int p_orderID, Item p_item, int p_quantity) {
+    orderID = p_orderID;
       item = p_item;
       quantity = p_quantity;
     }
     
     public int getOrderItemID() {
-      return orderItemID;
+      return orderID;
     }
 
     public Item getItem() {

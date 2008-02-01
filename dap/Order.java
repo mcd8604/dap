@@ -23,30 +23,32 @@ public class Order  implements Serializable {
     private int orderID;
     private int customerID;
     private Customer customer;
-    private float total;
+    private double total;
 	private Date created;
-	
+
     private ArrayList<OrderItem> orderItems;
 
 	private boolean completed;
 
+	public Order() {}
+	
     /** Creates a new instance of Order */
-    public Order(int p_customerID, float p_total) {
-      customerID = p_customerID;
+    public Order(int p_customerID, double p_total) {
+      setCustomerID(p_customerID);
       total = p_total;
       orderItems = new ArrayList<OrderItem>();
     }
     
-    public Order(int p_orderID, int p_customerID, float p_total) {
+    public Order(int p_orderID, int p_customerID, double p_total) {
 	orderID = p_orderID;
-      customerID = p_customerID;
+      setCustomerID(p_customerID);
       total = p_total;
       orderItems = new ArrayList<OrderItem>();
     }
     
-    public Order(int p_orderID, Customer p_customer, float p_total, Date p_created) {
+    public Order(int p_orderID, Customer p_customer, double p_total, Date p_created) {
     	orderID = p_orderID;
-    	customerID = p_customer.getID();
+    	setCustomerID(p_customer.getID());
     	customer = p_customer;
     	total = p_total;
     	created = p_created;
@@ -61,7 +63,7 @@ public class Order  implements Serializable {
       return customerID;
     }
 
-    public float getTotal() {
+    public double getTotal() {
       return total;
     }
     
@@ -69,12 +71,15 @@ public class Order  implements Serializable {
       return orderItems;
     }
 
+	public void addOrderItem(OrderItem orderItem) {
+		orderItems.add(orderItem);
+	}
+
     public void setOrderItems(ArrayList<OrderItem> p_OrderItems) {
     	orderItems = p_OrderItems;
     }
 
 	public void setCompleted(boolean b) {
-		// TODO Auto-generated method stub
 		completed = b;
 	}
 	
@@ -83,7 +88,6 @@ public class Order  implements Serializable {
 	}
 
 	public void setOrderID(int p_orderID) {
-		// TODO Auto-generated method stub
 		this.orderID = p_orderID;
 	}
 	
@@ -98,5 +102,9 @@ public class Order  implements Serializable {
     public Date getCreated() {
     	return created;
     }
+
+	private void setCustomerID(int customerID) {
+		this.customerID = customerID;
+	}
 }
 
