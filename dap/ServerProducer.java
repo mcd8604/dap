@@ -49,7 +49,7 @@ public class ServerProducer {
         }
         
         try{
-           dest = (Topic)jndiContext.lookup(Updater.UPDATER_DEST);
+           dest = (Destination)jndiContext.lookup(Updater.UPDATER_DEST);
            
            // create the connection
            conn = cf.createQueueConnection();
