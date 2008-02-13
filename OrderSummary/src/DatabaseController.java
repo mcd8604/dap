@@ -225,6 +225,85 @@ public class DatabaseController {
         
         return ret;
     }
+    
+    public static Customer editCustomer(Customer c) {
+    	Customer ret = null;
+    	ResultSet rs = null
+    	Statement insertStatement = null;
+    	String sqlInsert = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		insertStatement = getInstance().conn.createStatement();  
+
+        		//TODO update sql
+	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
+	            	" ('" + c.getFirstName() + 
+	            	"', '" + c.getLastName() + 
+	            	"', '" + c.getAddress() + 
+	            	"', '" + c.getCity() + 
+	            	"', '" + c.getState() + 
+	            	"', '" + c.getZipCode() + 
+	            	"', '" + c.getPhone() + 
+	            	"', '" + c.getemail() + "');";
+	            
+	            insertStatement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+        		 
+	            // 2 - Return Customer with ID
+	            rs = insertStatement.getGeneratedKeys();
+	            rs.next();
+	        	c.setID(rs.getInt(1));
+            	ret = c;
+        	}
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+        return ret;    	
+    }
+    
+    public static boolean deleteCustomer(Customer c) {
+    	boolean ret = null;
+    	ResultSet rs = null;
+    	// *** Do we need PreparedStatement?
+    	Statement insertStatement = null;
+    	String sqlInsert = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+        		// 1 - Insert New Customer
+        		insertStatement = getInstance().conn.createStatement();  
+
+        		//TODO update sql
+        		//delete sequence: (1)OrderItems (2)Orders (3)Customer
+	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
+	            	" ('" + c.getFirstName() + 
+	            	"', '" + c.getLastName() + 
+	            	"', '" + c.getAddress() + 
+	            	"', '" + c.getCity() + 
+	            	"', '" + c.getState() + 
+	            	"', '" + c.getZipCode() + 
+	            	"', '" + c.getPhone() + 
+	            	"', '" + c.getemail() + "');";
+	            
+	            insertStatement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+        		 
+            	ret = true;
+        	}
+        } catch(SQLException e){
+			ret = false;
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+        return ret;
+    	
+    }
 
     /**
      * Grabs the list of items from the database
@@ -482,6 +561,78 @@ public class DatabaseController {
 		return ret;
 	}
 
+    /**
+     * Gets all orders and items in the order for
+     * a certain customer.
+     * 
+     * @return a list of Orders
+     */
+	public static ArrayList<Order> getOrders(Customer c) {
+    	ArrayList<Order> ret = new ArrayList<Order>();
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	getInstance().getConnection();
+        	synchronized(stmtLock) {
+	            statement = getInstance().conn.createStatement(); 
+        		
+	            sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
+	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
+	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + c.getID() + " GROUP BY OrderItem.OrderID ";
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+	            Order currentOrder = new Order();
+	            
+				while(rs.next()) {        
+		        	int orderID = rs.getInt("OrderID");	 
+		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
+		        	double total = rs.getDouble("CalcTotal");
+		        	Date orderDate = rs.getDate("Ordr.CrDate");
+		            
+		        	int customerID = rs.getInt("Customer.ID");
+					String firstName = rs.getString("FirstName");
+					String lastName = rs.getString("LastName");
+					String address = rs.getString("Address");
+					String city = rs.getString("City");
+					String state = rs.getString("State");
+					String zipcode = rs.getString("Zipcode");
+					String phone = rs.getString("Phone");
+					String email = rs.getString("Email");
+		        	Date customerDate = rs.getDate("Customer.CrDate");
+
+		        	int itemID = rs.getInt("ItemID");
+		        	String itemName = rs.getString("ItemName");
+		        	String itemDesc = rs.getString("ItemDesc");
+		        	double salePrice = rs.getDouble("SalePrice");
+		        	double supplierPrice = rs.getDouble("SupplierPrice");
+		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);
+
+		        	int quantity = rs.getInt("Quantity");
+
+					if(orderID != currentOrder.getOrderID()) {
+						Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
+						currentOrder = new Order(orderID, customer, total, orderDate);
+					} 
+
+					currentOrder.addOrderItem(new OrderItem(orderID, item, quantity));
+					
+					ret.add(currentOrder);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			getInstance().closeConnection();
+		}
+        
+		return ret;
+	}
+	
+	
+	
     /**
      * TEST CASE
      */
