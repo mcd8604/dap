@@ -226,35 +226,32 @@ public class DatabaseController {
         return ret;
     }
     
-    public static Customer editCustomer(Customer c) {
-    	Customer ret = null;
+    public static boolean editCustomer(Customer c) {
+    	boolean ret = false;
     	ResultSet rs = null
-    	Statement insertStatement = null;
-    	String sqlInsert = null;
+    	Statement updateStatement = null;
+    	String updateSql = null;
 
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
-        		insertStatement = getInstance().conn.createStatement();  
+        		updateStatement = getInstance().conn.createStatement();  
 
         		//TODO update sql
-	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
-	            	" ('" + c.getFirstName() + 
-	            	"', '" + c.getLastName() + 
-	            	"', '" + c.getAddress() + 
-	            	"', '" + c.getCity() + 
-	            	"', '" + c.getState() + 
-	            	"', '" + c.getZipCode() + 
-	            	"', '" + c.getPhone() + 
-	            	"', '" + c.getemail() + "');";
+        		updateSql = "UPDATE Customer " + 
+	            	"SET Firstname = '" + c.getFirstName() + 
+	            	"', LastName = '" + c.getLastName() + 
+	            	"', Address = '" + c.getAddress() + 
+	            	"', City = '" + c.getCity() + 
+	            	"', State = '" + c.getState() + 
+	            	"', ZipCode = '" + c.getZipCode() + 
+	            	"', Phone = '" + c.getPhone() + 
+	            	"', Email = '" + c.getemail() +
+	            	"' WHERE ID = " + c.getID();
 	            
-	            insertStatement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-        		 
-	            // 2 - Return Customer with ID
-	            rs = insertStatement.getGeneratedKeys();
-	            rs.next();
-	        	c.setID(rs.getInt(1));
-            	ret = c;
+	            updateStatement.executeUpdate(updateSql);
+	            
+            	ret = true;
         	}
         } catch(SQLException e){
 			e.printStackTrace();
@@ -269,29 +266,23 @@ public class DatabaseController {
     	boolean ret = null;
     	ResultSet rs = null;
     	// *** Do we need PreparedStatement?
-    	Statement insertStatement = null;
-    	String sqlInsert = null;
+    	Statement deleteStatement = null;
+    	String deleteSql = null;
 
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
-        		// 1 - Insert New Customer
-        		insertStatement = getInstance().conn.createStatement();  
-
-        		//TODO update sql
-        		//delete sequence: (1)OrderItems (2)Orders (3)Customer
-	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
-	            	" ('" + c.getFirstName() + 
-	            	"', '" + c.getLastName() + 
-	            	"', '" + c.getAddress() + 
-	            	"', '" + c.getCity() + 
-	            	"', '" + c.getState() + 
-	            	"', '" + c.getZipCode() + 
-	            	"', '" + c.getPhone() + 
-	            	"', '" + c.getemail() + "');";
+        		//delete sequence: 
+        		//(1)OrderItems 
+        		deleteSql = "DELETE FROM OrderItem WHERE OrderItem.OrderID = (SELECT OrderID FROM Ordr WHERE ID = " + c.getID() + ")";
+	            deleteStatement.executeUpdate(deleteSql);
+	            //(2)Orders 
+	            deleteSql = "DELETE FROM Ordr WHERE Ordr.ID = " + c.getID();
+	            deleteStatement.executeUpdate(deleteSql);
+	            //(3)Customer
+	            deleteSql = "DELETE FROM Customer WHERE ID = " + c.getID();
+	            deleteStatement.executeUpdate(deleteSql);
 	            
-	            insertStatement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-        		 
             	ret = true;
         	}
         } catch(SQLException e){
