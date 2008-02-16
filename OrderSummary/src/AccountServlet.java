@@ -33,19 +33,23 @@ import javax.servlet.http.HttpServletResponse;
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		if (request.getAttribute("action").equals("new account")) {
+		if (request.getAttribute("action").equals("getCustomer")) {
+			// Create Customer c from JSP page
+			Customer c = null;
+			DatabaseController.isCustomer(c);
+		} else if (request.getAttribute("action").equals("createCustomer")) {
 			// Create Customer c from JSP page
 			Customer c = null;
 			DatabaseController.createCustomer(c);
-		} else if (request.getAttribute("action").equals("edit account")) {
+		} else if (request.getAttribute("action").equals("editCustomer")) {
 			// Create Customer c from JSP page
 			Customer c = null;
 			DatabaseController.editCustomer(c);
-		} else if (request.getAttribute("action").equals("delete account")) {
+		} else if (request.getAttribute("action").equals("removeCustomer")) {
 			// Create Customer c from JSP page
 			Customer c = null;
 			DatabaseController.deleteCustomer(c);
-		} else if (request.getAttribute("action").equals("order history")) {
+		} else if (request.getAttribute("action").equals("getCustomerOrders")) {
 			// Create Customer c from JSP page
 			Customer c = null;
 			DatabaseController.getOrders(c);
