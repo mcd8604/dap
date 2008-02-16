@@ -228,7 +228,7 @@ public class DatabaseController {
     
     public static boolean editCustomer(Customer c) {
     	boolean ret = false;
-    	ResultSet rs = null
+    	ResultSet rs = null;
     	Statement updateStatement = null;
     	String updateSql = null;
 
@@ -263,7 +263,7 @@ public class DatabaseController {
     }
     
     public static boolean deleteCustomer(Customer c) {
-    	boolean ret = null;
+    	boolean ret = false;
     	ResultSet rs = null;
     	// *** Do we need PreparedStatement?
     	Statement deleteStatement = null;
