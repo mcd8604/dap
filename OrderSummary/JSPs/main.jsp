@@ -9,11 +9,11 @@
 <body>
 	<h2>Login</h2>
 	<form enctype="text/plain" method="post"
-	 action="http://localhost:8080/OrderSummary/AccountServlet" name="getCustomer">
+	 action="http://localhost:8080/OrderSummary/AccountServlet">
 	 
 	 	<table>
 	 		<tr>
-	 			<td>ID:</td><td><input maxlength="20" size="20" name="id"></td>
+	 			<td>ID:</td><td><input type="text" maxlength="20" size="20" name="id"></td>
 			</tr>
 		</table>
 		<br />

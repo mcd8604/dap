@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@page session="true" %>
+<jsp:useBean id="cust" class="project4.Customer" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,7 +10,7 @@
 </head>
 <body>
 	<h2>Account Information</h2>
-	
+	<%= cust.getLastName() %>
 	<table>
 		<tr>
 			<td>User</td><td>Info</td>
