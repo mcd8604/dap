@@ -39,7 +39,6 @@ import project4.*;
 		BufferedReader in = request.getReader();
 		String line = "";
 		
-		
 		HttpSession sess = request.getSession(false);
 		
 		//System.out.println(request.getParameter("method"));
@@ -58,17 +57,17 @@ import project4.*;
 			
 			if (isCustomer) {
 				// get info
-				System.out.println("Valid customer");
-				Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
+				Customer cust = new Customer("1", "2", "3", "4", "5", "6", "7", "8");
 				//Customer cust = DatabaseController.getCustomer(id);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
 				sess.setAttribute("cust", cust);
-				//request.setAttribute("cust", cust);
 				dispatcher.forward(request, response);
 			} else {
 				// error message
-				System.out.println("Inalid customer");
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
+				sess.setAttribute("error", "Invalid user id: " + id);
+				dispatcher.forward(request, response);
 			}
 		} else if (action.equals("createCustomer")) {
 			// Create Customer c from JSP page
@@ -85,7 +84,7 @@ import project4.*;
 		} else if (action.equals("getCustomerOrders")) {
 			// Create Customer c from JSP page
 			Customer c = null;
-			DatabaseController.getOrders(c);
+			//DatabaseController.getCustomerOrders(0);
 		}
 	}   	  	    
 }

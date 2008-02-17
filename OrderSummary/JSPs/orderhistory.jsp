@@ -20,8 +20,9 @@
 			<% 
 				for (Order order : orders) { %>
 					<tr><td><p><%= "Order ID: " + order.getOrderID() %></p></td></tr>
-					<% 
-					for (OrderItem orderItem : order.getOrderItems()) { %>
+					<%
+						for (project4.OrderItem orderItem : order.getOrderItems()) {
+					%>
 						<tr><td></td><td><p><%= orderItem.getItem().getItemName() %></p></td>
 						<td><p><%= orderItem.getQuantity() %></p></td></tr>
 				<%	}
