@@ -179,6 +179,43 @@ public class DatabaseController {
         
         return ret;
     }
+    
+	public static Customer getCustomer(int customerID) {
+    	Customer ret = null;
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	synchronized(stmtLock) {
+	            statement = getStatement(); 
+        		
+	            sqlQuery = "SELECT * FROM Customer WHERE ID=" + customerID;
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				if(rs.next()) {		
+					String firstName = rs.getString("FirstName");
+					String lastName = rs.getString("LastName");
+					String address = rs.getString("Address");
+					String city = rs.getString("City");
+					String state = rs.getString("State");
+					String zipcode = rs.getString("Zipcode");
+					String phone = rs.getString("Phone");
+					String email = rs.getString("Email");
+					Date customerDate = rs.getDate("CrDate");
+		        	
+					ret = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			closeConnection();
+		}
+        
+		return ret;
+	}
 
     /**
      * Creates a customer in the database,
