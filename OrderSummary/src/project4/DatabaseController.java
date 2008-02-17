@@ -1,6 +1,5 @@
 package project4;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,7 +14,7 @@ public class DatabaseController {
     private static String DATASOURCE_DRIVER_CLASS = "com.mysql.jdbc.Driver";
     private static String DATASOURCE_URL = "jdbc:mysql://localhost:3306/" + CATALOG_NAME;
     private static String USERNAME = "root";
-    private static String PASSWORD = "password";
+    private static String PASSWORD = "";
     
     //Sync object
     private static Object stmtLock = new Object();
@@ -76,7 +75,7 @@ public class DatabaseController {
     	Statement statement = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement();                
 	            if(statement.execute(sqlQuery)) {
@@ -94,7 +93,7 @@ public class DatabaseController {
 			e.printStackTrace();
             throw new SQLException(e.getMessage());
         } finally {
-			getInstance().closeConnection();
+			closeConnection();;
 		}
         
         return ret;
@@ -123,24 +122,26 @@ public class DatabaseController {
     /**
      * Gets the connection for the instance
      */
-    private void getConnection() throws SQLException {      
+    private static void getConnection() throws SQLException {      
         try {
             Class.forName(DATASOURCE_DRIVER_CLASS);
-            conn = DriverManager.getConnection( DATASOURCE_URL, USERNAME, PASSWORD );
-        } catch (SQLException se) {
-            System.out.println("DATABASE CONNECTION FAILED: " + se.getMessage());
         } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
+        	System.out.println("MYSQL LIBRARY NOT FOUND: " + cnfe.getMessage());
+        }
+        if(getInstance().conn != null) {
+        	getInstance().conn = DriverManager.getConnection( DATASOURCE_URL, USERNAME, PASSWORD );	
+        } else {
+        	throw new SQLException("DATABASE CONNECTION FAILED");
         }
     }
     
     /**
      * Closes the connection for the instance
      */
-    private void closeConnection() {
+    private static void closeConnection() {
         try {
-            if( (conn!= null) && (!conn.isClosed()) )
-                conn.close();
+            if( (getInstance().conn!= null) && (!getInstance().conn.isClosed()) )
+            	getInstance().conn.close();
         } catch(Exception ex) {
         	ex.printStackTrace();
         }
@@ -159,7 +160,7 @@ public class DatabaseController {
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
         		// *** do we need PreparedStatement?
 	            statement = getInstance().conn.createStatement(); 
@@ -173,11 +174,48 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
         return ret;
     }
+    
+	public static Customer getCustomer(int customerID) {
+    	Customer ret = null;
+    	ResultSet rs = null;
+    	Statement statement = null;
+    	String sqlQuery = null;
+
+        try {
+        	synchronized(stmtLock) {
+	            statement = getStatement(); 
+        		
+	            sqlQuery = "SELECT * FROM Customer WHERE ID=" + customerID;
+	            statement.execute(sqlQuery);
+	            rs = statement.getResultSet();
+	            
+				if(rs.next()) {		
+					String firstName = rs.getString("FirstName");
+					String lastName = rs.getString("LastName");
+					String address = rs.getString("Address");
+					String city = rs.getString("City");
+					String state = rs.getString("State");
+					String zipcode = rs.getString("Zipcode");
+					String phone = rs.getString("Phone");
+					String email = rs.getString("Email");
+					Date customerDate = rs.getDate("CrDate");
+		        	
+					ret = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
+				}
+        	}        	
+        } catch(SQLException e){
+			e.printStackTrace();
+        } finally {
+			closeConnection();
+		}
+        
+		return ret;
+	}
 
     /**
      * Creates a customer in the database,
@@ -195,10 +233,10 @@ public class DatabaseController {
     	String sqlInsert = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
         		// 1 - Insert New Customer
-        		insertStatement = getInstance().conn.createStatement();  
+        		insertStatement = getStatement(); 
 
 	            sqlInsert = "INSERT INTO Customer (FirstName, LastName, Address, City, State, Zipcode, Phone, Email) VALUES " + 
 	            	" ('" + c.getFirstName() + 
@@ -221,7 +259,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
         return ret;
@@ -229,14 +267,13 @@ public class DatabaseController {
     
     public static boolean editCustomer(Customer c) {
     	boolean ret = false;
-    	ResultSet rs = null;
     	Statement updateStatement = null;
     	String updateSql = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
-        		updateStatement = getInstance().conn.createStatement();  
+        		updateStatement = getStatement(); 
 
         		//TODO update sql
         		updateSql = "UPDATE Customer " + 
@@ -257,7 +294,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
         return ret;    	
@@ -265,13 +302,11 @@ public class DatabaseController {
     
     public static boolean deleteCustomer(Customer c) {
     	boolean ret = false;
-    	ResultSet rs = null;
-    	// *** Do we need PreparedStatement?
     	Statement deleteStatement = null;
     	String deleteSql = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
         		//delete sequence: 
         		//(1)OrderItems 
@@ -290,7 +325,7 @@ public class DatabaseController {
 			ret = false;
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
         return ret;
@@ -310,9 +345,9 @@ public class DatabaseController {
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
-	            statement = getInstance().conn.createStatement(); 
+	            statement = getStatement();
         		sqlQuery = "SELECT * FROM Item";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
@@ -332,7 +367,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
 		return ret;
@@ -355,11 +390,11 @@ public class DatabaseController {
     	String sqlInsertOrderItems = null;
     	
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
         		o.setCompleted(false);
         		// 1 - Insert New Order
-        		insertOrderStatement = getInstance().conn.createStatement();  
+        		insertOrderStatement = getStatement(); 
 
         		sqlInsertOrder = "INSERT INTO Ordr (ID, Total) VALUES ('" + o.getCustomerID() + "', '" + o.getTotal() + "');";
         		
@@ -372,7 +407,7 @@ public class DatabaseController {
 	        	
             	// 3 - Insert all OrderItems
         		for(OrderItem oItem : o.getOrderItems()) {
-            		insertOrderItemsStatement = getInstance().conn.createStatement(); 
+            		insertOrderItemsStatement = getStatement();
         			Item i = oItem.getItem();
         			int itemID = i.getItemID();
         			int quantity = oItem.getQuantity();
@@ -385,7 +420,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
         return o;
@@ -405,9 +440,9 @@ public class DatabaseController {
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
-	            statement = getInstance().conn.createStatement(); 
+	            statement = getStatement();
         		
 	            sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
 	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
@@ -456,7 +491,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
 		return ret;
@@ -469,9 +504,9 @@ public class DatabaseController {
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	getConnection();
         	synchronized(stmtLock) {
-	            statement = getInstance().conn.createStatement(); 
+	            statement = getStatement();
         		
 	            sqlQuery = "SELECT * FROM Customer WHERE DATEDIFF(NOW(), CrDate) = 0";
 	            statement.execute(sqlQuery);
@@ -497,7 +532,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
 		return ret;
@@ -510,9 +545,9 @@ public class DatabaseController {
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	
         	synchronized(stmtLock) {
-	            statement = getInstance().conn.createStatement(); 
+	            statement = getStatement();
         		sqlQuery = "SELECT * FROM Supplier LEFT JOIN Item ON (Supplier.SupplierID = Item.SupplierID)";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
@@ -547,7 +582,7 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();;
 		}
         
 		return ret;
@@ -559,20 +594,20 @@ public class DatabaseController {
      * 
      * @return a list of Orders
      */
-	public static ArrayList<Order> getOrders(Customer c) {
+	public static ArrayList<Order> getCustomerOrders(int customerID) {
     	ArrayList<Order> ret = new ArrayList<Order>();
     	ResultSet rs = null;
     	Statement statement = null;
     	String sqlQuery = null;
 
         try {
-        	getInstance().getConnection();
+        	
         	synchronized(stmtLock) {
-	            statement = getInstance().conn.createStatement(); 
+	            statement = getStatement(); 
         		
 	            sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
 	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
-	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + c.getID() + " GROUP BY OrderItem.OrderID ";
+	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + customerID + " GROUP BY OrderItem.OrderID ";
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
@@ -584,7 +619,6 @@ public class DatabaseController {
 		        	double total = rs.getDouble("CalcTotal");
 		        	Date orderDate = rs.getDate("Ordr.CrDate");
 		            
-		        	int customerID = rs.getInt("Customer.ID");
 					String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String address = rs.getString("Address");
@@ -617,15 +651,25 @@ public class DatabaseController {
         } catch(SQLException e){
 			e.printStackTrace();
         } finally {
-			getInstance().closeConnection();
+			closeConnection();
 		}
         
 		return ret;
 	}
 	
-	
-	
-    /**
+    private static Statement getStatement() throws SQLException {
+		getConnection();
+    	Statement ret = null;
+    	if(getInstance().conn != null) {
+			ret = getInstance().conn.createStatement();
+    	} else {
+    		throw new SQLException("Could not get connection to database");
+    	}
+		
+    	return ret;
+	}
+
+	/**
      * TEST CASE
      */
     public static void main(String [] args) {
