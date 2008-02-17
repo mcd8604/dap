@@ -1,6 +1,3 @@
-package project4;
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import project4.*;
 
 /**
  * Servlet implementation class for Servlet: AccountServlet
@@ -41,7 +40,7 @@ import javax.servlet.http.HttpSession;
 		String line = "";
 		
 		
-		HttpSession  sess = request.getSession(false);
+		HttpSession sess = request.getSession(false);
 		
 		//System.out.println(request.getParameter("method"));
 		
@@ -63,8 +62,9 @@ import javax.servlet.http.HttpSession;
 				Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
 				//Customer cust = DatabaseController.getCustomer(id);
 				
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("../account.jsp");
-				request.setAttribute("customer", cust);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+				sess.setAttribute("cust", cust);
+				//request.setAttribute("cust", cust);
 				dispatcher.forward(request, response);
 			} else {
 				// error message
