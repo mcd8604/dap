@@ -53,11 +53,11 @@ import project4.*;
 			// Create Customer c from JSP page
 			int id = Integer.parseInt(lines.get(0).split("=")[1]);
 			Customer c = new Customer(id);
-			boolean isCustomer = DatabaseController.isCustomer(c);
 			
-			if (isCustomer) {
+			if (DatabaseController.isCustomer(c)) {
 				// get info
-				Customer cust = new Customer("1", "2", "3", "4", "5", "6", "7", "8");
+				Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
+				cust.setID(1234);
 				//Customer cust = DatabaseController.getCustomer(id);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
@@ -74,16 +74,22 @@ import project4.*;
 			Customer c = null;
 			DatabaseController.createCustomer(c);
 		} else if (action.equals("editCustomer")) {
-			// Create Customer c from JSP page
-			Customer c = null;
-			DatabaseController.editCustomer(c);
+			Customer c = (Customer)sess.getAttribute("cust");
+			//DatabaseController.editCustomer(c);
+			System.out.println("Updating Customer " + c.getID());
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+			dispatcher.forward(request, response);
 		} else if (action.equals("removeCustomer")) {
-			// Create Customer c from JSP page
-			Customer c = null;
-			DatabaseController.deleteCustomer(c);
+			Customer c = (Customer)sess.getAttribute("cust");
+			//DatabaseController.deleteCustomer(c);
+			System.out.println("Deleted customer " + c.getID());
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/main.jsp");
+			dispatcher.forward(request, response);
 		} else if (action.equals("getCustomerOrders")) {
 			// Create Customer c from JSP page
-			Customer c = null;
+			Customer c = (Customer)sess.getAttribute("cust");
 			//DatabaseController.getCustomerOrders(0);
 		}
 	}   	  	    
