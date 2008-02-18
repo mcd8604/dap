@@ -56,9 +56,9 @@ import project4.*;
 			
 			if (DatabaseController.isCustomer(c)) {
 				// get info
-				Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
-				cust.setID(1234);
-				//Customer cust = DatabaseController.getCustomer(id);
+				//Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
+				//cust.setID(1234);
+				Customer cust = DatabaseController.getCustomer(id);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
 				sess.setAttribute("cust", cust);
@@ -75,14 +75,25 @@ import project4.*;
 			DatabaseController.createCustomer(c);
 		} else if (action.equals("editCustomer")) {
 			Customer c = (Customer)sess.getAttribute("cust");
-			//DatabaseController.editCustomer(c);
+			
+			//READ IN ALL THE UPDATES AND MODIFY c
+			c.setLastName(lines.get(0).split("=")[1]);
+			c.setFirstName(lines.get(1).split("=")[1]);
+			c.setAddress(lines.get(2).split("=")[1]);
+			c.setCity(lines.get(3).split("=")[1]);
+			c.setState(lines.get(4).split("=")[1]);
+			c.setZipCode(lines.get(5).split("=")[1]);
+			c.setPhone(lines.get(6).split("=")[1]);
+			c.setEmail(lines.get(7).split("=")[1]);
+			
+			DatabaseController.editCustomer(c);
 			System.out.println("Updating Customer " + c.getID());
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
 			dispatcher.forward(request, response);
 		} else if (action.equals("removeCustomer")) {
 			Customer c = (Customer)sess.getAttribute("cust");
-			//DatabaseController.deleteCustomer(c);
+			DatabaseController.deleteCustomer(c);
 			System.out.println("Deleted customer " + c.getID());
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/main.jsp");
