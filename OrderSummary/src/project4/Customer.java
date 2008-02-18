@@ -86,32 +86,64 @@ public class Customer implements Serializable {
       return lastName;
     }
     
+    public void setLastName(String l) {
+    	lastName = l;
+    }
+    
     public String getFirstName() {
       return firstName;
+    }
+    
+    public void setFirstName(String f) {
+    	firstName = f;
     }
     
     public String getAddress() {
       return address;
     }
     
+    public void setAddress(String a) {
+    	address = a;
+    }
+    
     public String getCity() {
       return city;
+    }
+    
+    public void setCity(String c) {
+    	city = c;
     }
     
     public String getState() {
       return state;
     }
     
+    public void setState(String s) {
+    	state = s;
+    }
+    
     public String getZipCode() {
       return zipcode;
+    }
+    
+    public void setZipCode(String z) {
+    	zipcode = z;
     }
     
     public String getPhone() {
       return phone;
     }
     
+    public void setPhone(String p) {
+    	phone = p;
+    }
+    
     public String getemail() {
       return email;
+    }
+    
+    public void setEmail(String e) {
+    	email = e;
     }
     
     public ArrayList<Order> getOrders() {
