@@ -5,10 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Error</title>
 </head>
 <body>
 <h2>Error Page</h2>
-<%= session.getAttribute("error") %>
+<p>
+	The following error occurred:
+	<br/>
+	<%= session.getAttribute("error") %>
+</p>
 </body>
 </html>

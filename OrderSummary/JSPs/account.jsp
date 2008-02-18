@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@page session="true" %>
+<%@ page session="true" %>
 <jsp:useBean id="cust" class="project4.Customer" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -10,24 +10,49 @@
 </head>
 <body>
 	<h2>Account Information</h2>
-	<%= cust.getLastName() %>
 	<table>
 		<tr>
-			<td>User</td><td>Info</td>
+			<td>Account ID:</td><td><%= cust.getID() %></td>
+		</tr>
+		<tr>
+			<td>Last:</td><td><%= cust.getLastName() %></td>
+		</tr>
+		<tr>
+			<td>First:</td><td><%= cust.getFirstName() %></td>
+		</tr>
+		<tr>
+			<td>Address:</td><td><%= cust.getAddress() %></td>
+		</tr>
+		<tr>
+			<td>City:</td><td><%= cust.getCity() %></td>
+		</tr>
+		<tr>
+			<td>State:</td><td><%= cust.getState() %></td>
+		</tr>
+		<tr>
+			<td>Zip:</td><td><%= cust.getZipCode() %></td>
+		</tr>
+		<tr>
+			<td>Phone:</td><td><%= cust.getPhone() %></td>
+		</tr>
+		<tr>
+			<td>Email:</td><td><%= cust.getemail() %></td>
 		</tr>
 	</table>
-	
-	<a href="edit.jsp">Edit Account Information</a>
-	<br/><br/>
-	<a href="orderhistory.jsp">View Order History</a>
-	<br/><br/>
-	<a href="main.jsp">Log Out</a>
-	
-	<form enctype="text/plain" method="post"
-	 action="http://localhost:8080/OrderSummary/AccountServlet" name="delete">
-	 
-	  	<input type="submit" value="Delete Account">
-	</form>
-	
+	<br/>
+	<table>
+		<tr>
+			<td><a href="edit.jsp">Edit Account Information</a></td>
+		</tr>
+		<tr>
+			<td><a href="orderhistory.jsp">View Order History</a></td>
+		</tr>
+		<tr>
+			<td><a href="delete.jsp">Delete Account</a></td>
+		</tr>
+		<tr>
+			<td><a href="main.jsp">Log Out</a></td>
+		</tr>
+	</table>
 </body>
 </html>
