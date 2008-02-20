@@ -74,11 +74,25 @@ import project4.*;
 			}
 		} else if (action.equals("createCustomer")) {
 			// Create Customer c from newaccount.jsp
-			Customer c = null;
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/newaccount.jsp");
-			dispatcher.forward(request, response);
-			System.out.println(request.getParameter("method"));
-			DatabaseController.createCustomer(c);		
+			Customer c = new Customer();
+			
+			//READ IN ALL THE UPDATES AND MODIFY c
+			c.setLastName(lines.get(0).split("=")[1]);
+			c.setFirstName(lines.get(1).split("=")[1]);
+			c.setAddress(lines.get(2).split("=")[1]);
+			c.setCity(lines.get(3).split("=")[1]);
+			c.setState(lines.get(4).split("=")[1]);
+			c.setZipCode(lines.get(5).split("=")[1]);
+			c.setPhone(lines.get(6).split("=")[1]);
+			c.setEmail(lines.get(7).split("=")[1]);
+
+			DatabaseController.createCustomer(c);
+			System.out.println("Created Customer: " + c.getID());	
+
+			sess.setAttribute("cust", c);
+
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+			dispatcher.forward(request, response);	
 		} else if (action.equals("editCustomer")) {
 			Customer c = (Customer)sess.getAttribute("cust");
 			
