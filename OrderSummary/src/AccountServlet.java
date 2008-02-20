@@ -40,6 +40,9 @@ import project4.*;
 		String line = "";
 		
 		HttpSession sess = request.getSession(false);
+		if(sess == null){
+			response.sendRedirect("/error.jsp");		
+		}
 		
 		//System.out.println(request.getParameter("method"));
 		
