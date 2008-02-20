@@ -44,8 +44,6 @@ import project4.*;
 			response.sendRedirect("/error.jsp");		
 		}
 		
-		//System.out.println(request.getParameter("method"));
-		
 		while ((line = in.readLine()) != null) {
 			lines.add(line);
 		}
@@ -107,16 +105,16 @@ import project4.*;
 			c.setEmail(lines.get(7).split("=")[1]);
 			
 			DatabaseController.editCustomer(c);
-			System.out.println("Updating Customer " + c.getID());
 			
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/confirm.jsp");
+			sess.setAttribute("confirmMsg", "Customer " + c.getID() + " has been updated.<br/><br/><a href=\"account.jsp\">Back to Account</a>");
 			dispatcher.forward(request, response);
 		} else if (action.equals("removeCustomer")) {
 			Customer c = (Customer)sess.getAttribute("cust");
 			DatabaseController.deleteCustomer(c);
-			System.out.println("Deleted customer " + c.getID());
 			
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/main.jsp");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/confirm.jsp");
+			sess.setAttribute("confirmMsg", "The Customer with ID " + c.getID() + " has been removed.");
 			dispatcher.forward(request, response);
 		} else if (action.equals("getCustomerOrders")) {
 			// Create Customer c from JSP page
