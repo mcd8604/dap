@@ -7,6 +7,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Edit Account</title>
+<script type="text/javascript">
+<!--
+function confirmation() {
+	if (confirm("Update Account Information?")){
+		return true;
+	}
+	else{
+		return false;
+	}
+	
+	return true;
+}
+//-->
+</script>
 </head>
 <body>
 	<h2>Edit Account Information</h2>
@@ -44,7 +58,7 @@
 			</tr>
 		</table>
 		
-		<input type="submit" value="Update Account Information">
+		<input type="submit" onclick="return confirmation()" value="Update Account Information">
 	 	<input type="hidden" name="action" value="editCustomer"/>
 	</form>
 	
