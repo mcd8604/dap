@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@page session="true" %>
+<%@ page import="java.util.*, project4.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,9 +9,6 @@
 <title>Order Summary</title>
 </head>
 <body>
-	<%@page session="true" %>
-	<%@ page import="java.util.*" %>
-	<%@ page import="java.io.*" %>
 	<jsp:include page="DatabaseController" flush="true"/>
 	<%-- NEED TO ADD THE CUSTOMER NUMBER HERE TO PASS TO GETCUSTOMERORDERS --%>
 	<% ArrayList<Order> orders = DatabaseController.getCustomerOrders((Integer)session.getAttribute( "customerID" )); %>
