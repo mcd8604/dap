@@ -70,9 +70,12 @@ import project4.*;
 				dispatcher.forward(request, response);
 			}
 		} else if (action.equals("createCustomer")) {
-			// Create Customer c from JSP page
+			// Create Customer c from newaccount.jsp
 			Customer c = null;
-			DatabaseController.createCustomer(c);
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/newaccount.jsp");
+			dispatcher.forward(request, response);
+			System.out.println(request.getParameter("method"));
+			DatabaseController.createCustomer(c);		
 		} else if (action.equals("editCustomer")) {
 			Customer c = (Customer)sess.getAttribute("cust");
 			
