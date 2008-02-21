@@ -9,7 +9,7 @@
 <body>
 	<h2>Create New Account</h2>
 	<form enctype="text/plain" method="post"
-	 action="http://localhost:8080/OrderSummary/AccountServlet" name="createCustomer">
+	 action="/OrderSummary/AccountServlet" name="createCustomer">
 	<table>
 	<tr><td>Last Name*: </td><td><input type="text" name="lastname" /> </td></tr>
  	<tr><td>First Name*: </td><td><input type="text" name="firstname" /> </td></tr>

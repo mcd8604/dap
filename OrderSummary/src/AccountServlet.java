@@ -48,7 +48,11 @@ import project4.*;
 			lines.add(line);
 		}
 		
-		String action = lines.get(lines.size()-1).split("=")[1];
+		String action = "";
+		
+		if (lines.size() > 0) {
+			action = lines.get(lines.size()-1).split("=")[1];
+		}
 		
 		if (action.equals("getCustomer")) {
 			// Create Customer c from JSP page
@@ -57,8 +61,6 @@ import project4.*;
 			
 			if (DatabaseController.isCustomer(c)) {
 				// get info
-				//Customer cust = new Customer("Last", "First", "Address", "City", "State", "Zip", "Phone", "Email");
-				//cust.setID(1234);
 				Customer cust = DatabaseController.getCustomer(id);
 				
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/account.jsp");
@@ -81,8 +83,12 @@ import project4.*;
 			c.setCity(lines.get(3).split("=")[1]);
 			c.setState(lines.get(4).split("=")[1]);
 			c.setZipCode(lines.get(5).split("=")[1]);
-			c.setPhone(lines.get(6).split("=")[1]);
-			c.setEmail(lines.get(7).split("=")[1]);
+			if (lines.get(6).split("=").length == 2) {
+				c.setPhone(lines.get(6).split("=")[1]);
+			}
+			if (lines.get(7).split("=").length == 2) {
+				c.setEmail(lines.get(7).split("=")[1]);
+			}
 
 			DatabaseController.createCustomer(c);
 			System.out.println("Created Customer: " + c.getID());	
@@ -101,8 +107,12 @@ import project4.*;
 			c.setCity(lines.get(3).split("=")[1]);
 			c.setState(lines.get(4).split("=")[1]);
 			c.setZipCode(lines.get(5).split("=")[1]);
-			c.setPhone(lines.get(6).split("=")[1]);
-			c.setEmail(lines.get(7).split("=")[1]);
+			if (lines.get(6).split("=").length == 2) {
+				c.setPhone(lines.get(6).split("=")[1]);
+			}
+			if (lines.get(7).split("=").length == 2) {
+				c.setEmail(lines.get(7).split("=")[1]);
+			}
 			
 			DatabaseController.editCustomer(c);
 			
@@ -116,10 +126,13 @@ import project4.*;
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/confirm.jsp");
 			sess.setAttribute("confirmMsg", "The Customer with ID " + c.getID() + " has been removed.");
 			dispatcher.forward(request, response);
-		} else if (action.equals("getCustomerOrders")) {
-			// Create Customer c from JSP page
+		} else if (action.equals("getOrders")) {
 			Customer c = (Customer)sess.getAttribute("cust");
-			//DatabaseController.getCustomerOrders(0);
+			ArrayList<Order> orders = DatabaseController.getCustomerOrders(c.getID());
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/orderhistory.jsp");
+			sess.setAttribute("orders", orders);
+			dispatcher.forward(request, response);
 		}
 	}   	  	    
 }

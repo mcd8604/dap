@@ -26,7 +26,7 @@ function confirmation() {
 	<h2>Edit Account Information</h2>
 	
 	<form enctype="text/plain" method="post"
-	 action="http://localhost:8080/OrderSummary/AccountServlet">
+	 action="/OrderSummary/AccountServlet">
 	 
 		<table>
 			<tr>

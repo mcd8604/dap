@@ -310,6 +310,7 @@ public class DatabaseController {
         try {
         	getInstance().getConnection();
         	synchronized(stmtLock) {
+        		deleteStatement = getInstance().conn.createStatement();
         		//delete sequence: 
         		//(1)OrderItems 
         		deleteSql = "DELETE FROM OrderItem WHERE OrderItem.OrderID = (SELECT OrderID FROM Ordr WHERE ID = " + c.getID() + ")";
@@ -611,7 +612,7 @@ public class DatabaseController {
 	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
 	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + customerID + " GROUP BY OrderItem.OrderID ";*/
 
-			sqlQuery = SELECT Ordr.ID, ItemName, Quantity FROM " +
+			sqlQuery = "SELECT Ordr.ID, ItemName, Quantity FROM " +
 					"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) LEFT JOIN " +
 					"Ordr ON Ordr.OrderID = OrderItem.OrderID WHERE Ordr.ID = " + customerID;
 
@@ -644,7 +645,7 @@ public class DatabaseController {
 		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);*/
 
 		        	String itemName = rs.getString("ItemName");
-				Item item = new Item(itemName);
+		        	Item item = new Item(itemName);
 
 		        	int quantity = rs.getInt("Quantity");
 
@@ -727,12 +728,22 @@ public class DatabaseController {
         	}*/
         	
         	//TEST getCustomersToday
-        	ArrayList<Customer> customers = getCustomersToday();
-        	Iterator<Customer> iter = customers.iterator();
-        	while(iter.hasNext()) {
-        		Customer c = iter.next();
-        		System.out.println(c.getLastName() + ", " + c.getFirstName() + " :: CREATED: " + c.getCreated());
-        		
+//        	ArrayList<Customer> customers = getCustomersToday();
+//        	Iterator<Customer> iter = customers.iterator();
+//        	while(iter.hasNext()) {
+//        		Customer c = iter.next();
+//        		System.out.println(c.getLastName() + ", " + c.getFirstName() + " :: CREATED: " + c.getCreated());
+//        		
+//        	}
+        	
+        	ArrayList<Order> orders = getCustomerOrders(1);
+        	
+        	for (Order order : orders) {
+				System.out.println("Order ID: " + order.getOrderID());
+
+				for (OrderItem orderItem : order.getOrderItems()) {
+					System.out.println(orderItem.getItem().getItemName() + " " + orderItem.getQuantity());
+				}
         	}
         	
         } catch(Exception ex) {

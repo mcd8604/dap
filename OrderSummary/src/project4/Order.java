@@ -31,7 +31,9 @@ public class Order  implements Serializable {
 
 	private boolean completed;
 
-	public Order() {}
+	public Order() {
+		orderItems = new ArrayList<OrderItem>();
+	}
 	
     /** Creates a new instance of Order */
     public Order(int p_customerID, double p_total) {
