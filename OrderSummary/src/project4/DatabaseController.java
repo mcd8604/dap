@@ -607,21 +607,26 @@ public class DatabaseController {
         	synchronized(stmtLock) {
 	            statement = getInstance().conn.createStatement(); 
         		
-	            sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
+	            /*sqlQuery = "SELECT *, sum(OrderItem.Quantity * Item.SalePrice) AS CalcTotal FROM Ordr RIGHT JOIN " +
 	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
-	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + customerID + " GROUP BY OrderItem.OrderID ";
+	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + customerID + " GROUP BY OrderItem.OrderID ";*/
+
+			sqlQuery = SELECT Ordr.ID, ItemName, Quantity FROM " +
+					"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) LEFT JOIN " +
+					"Ordr ON Ordr.OrderID = OrderItem.OrderID WHERE Ordr.ID = " + customerID;
+
 	            statement.execute(sqlQuery);
 	            rs = statement.getResultSet();
 	            
 	            Order currentOrder = new Order();
 	            
 				while(rs.next()) {        
-		        	int orderID = rs.getInt("OrderID");	 
+		        	int orderID = rs.getInt("Ordr.ID");	 
 		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
-		        	double total = rs.getDouble("CalcTotal");
-		        	Date orderDate = rs.getDate("Ordr.CrDate");
+		        	//double total = rs.getDouble("CalcTotal");
+		        	//Date orderDate = rs.getDate("Ordr.CrDate");
 		            
-					String firstName = rs.getString("FirstName");
+				/*	String firstName = rs.getString("FirstName");
 					String lastName = rs.getString("LastName");
 					String address = rs.getString("Address");
 					String city = rs.getString("City");
@@ -629,20 +634,25 @@ public class DatabaseController {
 					String zipcode = rs.getString("Zipcode");
 					String phone = rs.getString("Phone");
 					String email = rs.getString("Email");
-		        	Date customerDate = rs.getDate("Customer.CrDate");
+		        	Date customerDate = rs.getDate("Customer.CrDate");*/
 
-		        	int itemID = rs.getInt("ItemID");
+		        	/*int itemID = rs.getInt("ItemID");
 		        	String itemName = rs.getString("ItemName");
 		        	String itemDesc = rs.getString("ItemDesc");
 		        	double salePrice = rs.getDouble("SalePrice");
 		        	double supplierPrice = rs.getDouble("SupplierPrice");
-		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);
+		        	Item item = new Item(itemID, itemName, itemDesc, salePrice, supplierPrice);*/
+
+		        	String itemName = rs.getString("ItemName");
+				Item item = new Item(itemName);
 
 		        	int quantity = rs.getInt("Quantity");
 
 					if(orderID != currentOrder.getOrderID()) {
-						Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
-						currentOrder = new Order(orderID, customer, total, orderDate);
+						//Customer customer = new Customer(customerID, lastName, firstName, address, city, state, zipcode, phone, email, customerDate);
+						//currentOrder = new Order(orderID, customer, total, orderDate);
+						currentOrder = new Order();
+						currentOrder.setOrderID(orderID);
 					} 
 
 					currentOrder.addOrderItem(new OrderItem(orderID, item, quantity));

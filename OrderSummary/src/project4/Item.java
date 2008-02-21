@@ -27,6 +27,10 @@ public class Item implements Serializable {
     private double supplierPrice;
     private Supplier supplier;
 
+    public Item (String p_itemName) {
+      itemName = p_itemName;
+    }
+
     /** Creates a new instance of Item */
     public Item (int p_itemID, String p_itemName, String p_itemDesc, double p_salePrice, double p_supplierPrice) {
       itemID = p_itemID;
