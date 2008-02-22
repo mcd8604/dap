@@ -612,7 +612,7 @@ public class DatabaseController {
 	            		"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) ON Ordr.OrderID = OrderItem.OrderID LEFT JOIN " +
 	            		"Customer ON(Ordr.ID = Customer.ID) WHERE Ordr.ID = " + customerID + " GROUP BY OrderItem.OrderID ";*/
 
-			sqlQuery = "SELECT Ordr.ID, ItemName, Quantity FROM " +
+			sqlQuery = "SELECT Ordr.OrderID, ItemName, Quantity FROM " +
 					"(OrderItem LEFT JOIN Item ON OrderItem.ItemID = Item.ItemID) LEFT JOIN " +
 					"Ordr ON Ordr.OrderID = OrderItem.OrderID WHERE Ordr.ID = " + customerID;
 
@@ -622,7 +622,7 @@ public class DatabaseController {
 	            Order currentOrder = new Order();
 	            
 				while(rs.next()) {        
-		        	int orderID = rs.getInt("Ordr.ID");	 
+		        	int orderID = rs.getInt("Ordr.OrderID");	 
 		        	//Boolean completed = Boolean.parseBoolean(rs.getString("Completed"));
 		        	//double total = rs.getDouble("CalcTotal");
 		        	//Date orderDate = rs.getDate("Ordr.CrDate");
@@ -654,11 +654,10 @@ public class DatabaseController {
 						//currentOrder = new Order(orderID, customer, total, orderDate);
 						currentOrder = new Order();
 						currentOrder.setOrderID(orderID);
+						ret.add(currentOrder);
 					} 
 
 					currentOrder.addOrderItem(new OrderItem(orderID, item, quantity));
-					
-					ret.add(currentOrder);
 				}
         	}        	
         } catch(SQLException e){
