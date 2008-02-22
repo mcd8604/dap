@@ -4,12 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script src="validation.js" />
 <title>New Account</title>
 </head>
 <body>
 	<h2>Create New Account</h2>
-	<form enctype="text/plain" method="post"
-	 action="/OrderSummary/AccountServlet" name="createCustomer">
+	<form enctype="text/plain" method="post" onsubmit="return validate(this)"
+	 action="http://localhost:8080/OrderSummary/AccountServlet" name="createCustomer">
 	<table>
 	<tr><td>Last Name*: </td><td><input type="text" name="lastname" /> </td></tr>
  	<tr><td>First Name*: </td><td><input type="text" name="firstname" /> </td></tr>

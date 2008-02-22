@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Edit Account</title>
+<script src="validation.js" />
 <script type="text/javascript">
 <!--
 function confirmation() {
@@ -25,7 +26,7 @@ function confirmation() {
 <body>
 	<h2>Edit Account Information</h2>
 	
-	<form enctype="text/plain" method="post"
+	<form enctype="text/plain" method="post" onsubmit="return validate(this)"
 	 action="/OrderSummary/AccountServlet">
 	 
 		<table>
@@ -58,7 +59,7 @@ function confirmation() {
 			</tr>
 		</table>
 		
-		<input type="submit" onclick="return confirmation()" value="Update Account Information">
+		<input type="submit" onclick="return  confirmation()" value="Update Account Information">
 	 	<input type="hidden" name="action" value="editCustomer"/>
 	</form>
 	
